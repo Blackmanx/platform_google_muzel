@@ -1,0 +1,32 @@
+python_library_host {
+    name: "libcamera_mojom_lib",
+    srcs: [
+        "mojom/parse/ast.py",
+        "mojom/parse/conditional_features.py",
+        "mojom/parse/lexer.py",
+        "mojom/parse/parser.py",
+        "mojom/error.py",
+        "mojom/fileutil.py",
+        "mojom/generate/check.py",
+        "mojom/generate/constant_resolver.py",
+        "mojom/generate/generator.py",
+        "mojom/generate/module.py",
+        "mojom/generate/pack.py",
+        "mojom/generate/template_expander.py",
+        "mojom/generate/translate.py",
+    ],
+    libs: [
+        "py-jinja",
+        "py-ply",
+    ],
+}
+
+python_library_host {
+    name: "libcamera_mojom_parser_host",
+    srcs: [
+        "mojom_parser.py",
+    ],
+    libs: [
+        "libcamera_mojom_lib",
+    ],
+}

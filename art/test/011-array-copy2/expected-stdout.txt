@@ -1,0 +1,3 @@
+[ByteArrayTests]: passed
+[CharArrayTests]: passed
+[IntArrayTests]: passed

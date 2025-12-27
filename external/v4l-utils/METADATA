@@ -1,0 +1,21 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/v4l-utils
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "v4l-utils"
+description: "Collection of tools to test video4linux devices."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2025
+    month: 6
+    day: 24
+  }
+  homepage: "https://www.linuxtv.org/"
+  identifier {
+    type: "Git"
+    value: "https://git.linuxtv.org/v4l-utils.git"
+    version: "v4l-utils-1.30.0"
+    primary_source: true
+  }
+}

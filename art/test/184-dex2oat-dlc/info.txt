@@ -1,0 +1,2 @@
+Regression test for duplicate classes in a `DelegateLastClassLoader` and
+its parent `ClassLoader` causing a crash in `dex2oat`.

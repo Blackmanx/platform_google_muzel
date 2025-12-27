@@ -1,0 +1,30 @@
+{
+  "SPDXID" : "SPDXRef-DOCUMENT",
+  "spdxVersion" : "SPDX-2.3",
+  "creationInfo" : {
+    "created" : "2025-08-06T14:28:02Z",
+    "creators" : [ "Tool: spdx-gradle-plugin", "Organization: JetBrains s.r.o." ]
+  },
+  "name" : "kotlin-daemon-embeddable",
+  "dataLicense" : "CC0-1.0",
+  "documentNamespace" : "https://www.jetbrains.com/spdxdocs/ece64708-de6f-4778-bd0e-e4ee8a9ec7c7",
+  "packages" : [ {
+    "SPDXID" : "SPDXRef-gnrtd0",
+    "copyrightText" : "NOASSERTION",
+    "description" : "Kotlin Daemon (for using with embeddable compiler)",
+    "downloadLocation" : "NOASSERTION",
+    "filesAnalyzed" : false,
+    "licenseConcluded" : "NOASSERTION",
+    "licenseDeclared" : "NOASSERTION",
+    "licenseInfoFromFiles" : [ ],
+    "name" : "kotlin-daemon-embeddable",
+    "sourceInfo" : "git+https://github.com/JetBrains/kotlin.git@v2.2.0#kotlin-daemon-embeddable[:kotlin-daemon-embeddable]",
+    "supplier" : "Organization: JetBrains s.r.o.",
+    "versionInfo" : "2.2.0"
+  } ],
+  "relationships" : [ {
+    "spdxElementId" : "SPDXRef-DOCUMENT",
+    "relationshipType" : "DESCRIBES",
+    "relatedSpdxElement" : "SPDXRef-gnrtd0"
+  } ]
+}

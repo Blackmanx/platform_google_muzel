@@ -1,0 +1,10 @@
+JNI_OnLoad called
+Main Started; java name: main
+Pthread name: main
+Child's Java name: birth name
+Setting name from main
+Name was set
+Final child Java name: new name
+Final child pthread name: new name
+Final parent Java name: main
+Final parent pthread name: main

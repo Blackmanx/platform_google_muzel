@@ -1,0 +1,55 @@
+From 921e84d819553bcf90d8b8ba72c7d095126f0eb5 Mon Sep 17 00:00:00 2001
+From: Wake Liu <wakel@google.com>
+Date: Thu, 24 Jul 2025 20:09:01 +0800
+Subject: [PATCH] ANDROID: binderfs: skip when user namespace unavailable
+
+The binderfs test requires user namespaces to be available. If they are
+not, skip the test.
+
+Bug: 422759683
+Link: https://lore.kernel.org/all/20250807134510.1818025-1-wakel@google.com/
+Test: atest -a vts_linux_kselftest_x86_64
+Change-Id: Ib93d3253b2ea98560f426a58e1d3e001eadcea2a
+Signed-off-by: Wake Liu <wakel@google.com>
+---
+ .../selftests/filesystems/binderfs/binderfs_test.c     | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+index 81db85a5cc164..6e35c82bf45e5 100644
+--- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
++++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+@@ -291,6 +291,11 @@ static int write_id_mapping(enum idmap_type type, pid_t pid, const char *buf,
+ 	return 0;
+ }
+ 
++static bool has_userns()
++{
++	return (access("/proc/self/ns/user", F_OK) == 0);
++}
++
+ static void change_userns(struct __test_metadata *_metadata, int syncfds[2])
+ {
+ 	int ret;
+@@ -378,6 +383,9 @@ static void *binder_version_thread(void *data)
+  */
+ TEST(binderfs_stress)
+ {
++	if (!has_userns())
++		SKIP(return, "%s: user namespace not supported\n", __func__);
++
+ 	int fds[1000];
+ 	int syncfds[2];
+ 	pid_t pid;
+@@ -502,6 +510,8 @@ TEST(binderfs_test_privileged)
+ 
+ TEST(binderfs_test_unprivileged)
+ {
++	if (!has_userns())
++		SKIP(return, "%s: user namespace not supported\n", __func__);
+ 	int ret;
+ 	int syncfds[2];
+ 	pid_t pid;
+-- 
+2.50.1.703.g449372360f-goog
+

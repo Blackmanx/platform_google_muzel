@@ -1,0 +1,17 @@
+name: "error_prone"
+description:
+    "Error Prone is a static analysis tool for Java that catches common "
+    "programming mistakes at compile-time."
+
+third_party {
+  license_type: NOTICE
+  identifier {
+    type: "Git"
+    value: "https://github.com/google/error-prone.git"
+    primary_source: true
+  }
+  # This v2.41.0^ (the parent of v2.41.0) because the tags do not belong to any branch.
+  # Importing the parent commit also avoids merge conflicts in the pom.xml files.
+  version: "6161d4eabdaf3988911a14bf31b45411004df69b"
+  last_upgrade_date { year: 2025 month: 7 day: 24}
+}

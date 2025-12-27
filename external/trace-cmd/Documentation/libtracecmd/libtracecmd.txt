@@ -1,0 +1,139 @@
+libtracecmd(3)
+=============
+
+NAME
+----
+libtracecmd - trace-cmd library APIs
+
+SYNOPSIS
+--------
+[verse]
+--
+*#include <trace-cmd.h>*
+
+Open and close trace file:
+	struct tracecmd_input pass:[*]*tracecmd_open*(const char pass:[*]_file_, int _flags_);
+	struct tracecmd_input pass:[*]*tracecmd_open_fd*(int _fd_, int _flags_);
+	struct tracecmd_input pass:[*]*tracecmd_open_head*(const char pass:[*]_file_, int _flags_);
+	void *tracecmd_close*(struct tracecmd_input pass:[*]_handle_);
+	void *tracecmd_set_private*(struct tracecmd_input pass:[*]_handle_, void pass:[*]_data_);
+	void pass:[*]*tracecmd_get_private*(struct tracecmd_input pass:[*]_handle_);
+
+Read tracing records from a trace file:
+	int *tracecmd_init_data*(struct tracecmd_input pass:[*]_handle_);
+	struct tep_record pass:[*]*tracecmd_read_cpu_first*(struct tracecmd_input pass:[*]_handle_, int _cpu_);
+	struct tep_record pass:[*]*tracecmd_read_data*(struct tracecmd_input pass:[*]_handle_, int _cpu_);
+	struct tep_record pass:[*]*tracecmd_read_at*(struct tracecmd_input pass:[*]_handle_, unsigned long long _offset_, int pass:[*]_cpu_);
+	void *tracecmd_free_record*(struct tep_record pass:[*]_record_);
+	struct tep_handle pass:[*]*tracecmd_get_tep*(struct tracecmd_input pass:[*]_handle_);
+
+Iterating over events in a trace file:
+	int *tracecmd_iterate_events*(struct tracecmd_input pass:[*]_handle_,
+				    cpu_set_t pass:[*]_cpus_, int _cpu_size_,
+				    int (pass:[*]_callback_)(struct tracecmd_input pass:[*],
+						    struct tep_record pass:[*],
+						    int, void pass:[*]),
+				    void pass:[*]_callback_data_);
+	int *tracecmd_iterate_events_multi*(struct tracecmd_input pass:[**]_handles_,
+					  int _nr_handles_,
+					  int (pass:[*]_callback_)(struct tracecmd_input pass:[*],
+								   struct tep_record pass:[*],
+							   int, void pass:[*]),
+					  void pass:[*]_callback_data_);
+	int *tracecmd_iterate_events_reverse*(struct tracecmd_input pass:[*]_handle_,
+				    cpu_set_t pass:[*]_cpus_, int _cpu_size_,
+				    int (pass:[*]_callback_)(struct tracecmd_input pass:[*],
+						    struct tep_record pass:[*],
+						    int, void pass:[*]),
+				    void pass:[*]_callback_data_, bool _cont_);
+	int *tracecmd_follow_event*(struct tracecmd_input pass:[*]_handle_,
+				  const char pass:[*]_system_, const char pass:[*]_event_name_,
+				  int (pass:[*]_callback_)(struct tracecmd_input pass:[*],
+						  struct tep_event pass:[*],
+						  struct tep_record pass:[*],
+						  int, void pass:[*]),
+				  void pass:[*]_callback_data_);
+	int *tracecmd_follow_missed_events*(struct tracecmd_input pass:[*]_handle_,
+					   int (pass:[*]_callback_)(struct tracecmd_input pass:[*],
+							   struct tep_event pass:[*],
+							   struct tep_record pass:[*],
+							   int, void pass:[*]),
+					   void pass:[*]_callback_data_);
+	struct tracecmd_filter pass:[*]*tracecmd_filter_add*(struct tracecmd_input *_handle_,
+						    const char pass:[*]_filter_str_, bool _neg_);
+	int *tracecmd_iterate_reset*(struct tracecmd_input pass:[*]_handle_);
+
+Read tracing instances from a trace file:
+	int *tracecmd_buffer_instances*(struct tracecmd_input pass:[*]_handle_);
+	const char pass:[*]*tracecmd_buffer_instance_name*(struct tracecmd_input pass:[*]_handle_, int _indx_);
+	struct tracecmd_input pass:[*]*tracecmd_buffer_instance_handle*(struct tracecmd_input pass:[*]_handle_, int _indx_);
+
+Handle time stamps from a trace file:
+	unsigned long long *tracecmd_get_first_ts*(struct tracecmd_input pass:[*]_handle_);
+	void *tracecmd_add_ts_offset*(struct tracecmd_input pass:[*]_handle_, long long _offset_);
+	int *tracecmd_get_tsc2nsec*(struct tracecmd_input pass:[*]_handle_, int pass:[*]_mult_, int pass[*]_shift_, unsigned long long pass:[*]_offset_);
+
+Get traceing peer information from a trace file:
+	unsigned long long *tracecmd_get_traceid*(struct tracecmd_input pass:[*]_handle_);
+	int *tracecmd_get_guest_cpumap*(struct tracecmd_input pass:[*]_handle_, unsigned long long _trace_id_, const char pass:[*]pass:[*]_name_, int pass:[*]_vcpu_count_, const int pass:[*]pass:[*]_cpu_pid_);
+
+Mapping host and guest trace files:
+	int *tracecmd_map_vcpus*(struct tracecmd_input pass:[**]handles, int nr_handles);
+	struct tracecmd_cpu_map pass:[*]*tracecmd_get_cpu_map*(struct tracecmd_input pass:[*]handle, int cpu);
+	struct tracecmd_cpu_map pass:[*]*tracecmd_map_find_by_host_pid*(struct tracecmd_input pass:[*]handle,
+						      int host_pid);
+	int *tracecmd_map_get_host_pid*(struct tracecmd_cpu_map pass:[*]map);
+	struct tracecmd_input pass:[*]*tracecmd_map_get_guest*(struct tracecmd_cpu_map pass:[*]map);
+	void *tracecmd_map_set_private*(struct tracecmd_cpu_map pass:[*]map, void pass:[*]priv);
+	void pass:[*]*tracecmd_map_get_private*(struct tracecmd_cpu_map pass:[*]map);
+
+Control library logs:
+	int *tracecmd_set_loglevel*(enum tep_loglevel _level_);
+--
+
+DESCRIPTION
+-----------
+The libtracecmd(3) library provides APIs to read, parse and write
+_trace-cmd.dat(5)_ files, recorded with _trace-cmd(1)_ application and containing
+tracing information from ftrace, the official Linux kernel tracer.
+
+FILES
+-----
+[verse]
+--
+*trace-cmd.h*
+	Header file to include in order to have access to the library APIs.
+*-ltracecmd*
+	Linker switch to add when building a program that uses the library.
+--
+
+SEE ALSO
+--------
+*libtraceevent(3)*
+*libtracefs(3)*
+*trace-cmd(1)*
+*trace-cmd.dat(5)*
+
+AUTHOR
+------
+[verse]
+--
+*Steven Rostedt* <rostedt@goodmis.org>
+*Tzvetomir Stoyanov* <tz.stoyanov@gmail.com>
+--
+REPORTING BUGS
+--------------
+Report bugs to  <linux-trace-devel@vger.kernel.org>
+
+LICENSE
+-------
+libtracecmd is Free Software licensed under the GNU LGPL 2.1
+
+RESOURCES
+---------
+https://git.kernel.org/pub/scm/utils/trace-cmd/trace-cmd.git/
+
+COPYING
+-------
+Copyright \(C) 2020 VMware, Inc. Free use of this software is granted under
+the terms of the GNU Public License (GPL).

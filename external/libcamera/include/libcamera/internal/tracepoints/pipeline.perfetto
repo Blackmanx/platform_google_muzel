@@ -1,0 +1,10 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * Copyright (C) 2022, Google Inc.
+ *
+ * pipeline.tp - Tracepoints for pipelines
+ */
+
+void LIBCAMERA_TRACE_EVENT_ipa_call_begin(const char *pipe, const char *func);
+
+void LIBCAMERA_TRACE_EVENT_ipa_call_end(const char *pipe, const char *func);

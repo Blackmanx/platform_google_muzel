@@ -1,0 +1,4 @@
+# To create java.lang.Enum$EnumDesc class without the Enum class,
+# use this jarjar rule to rename the EnumSec.
+# See "openjdk_lambda_stub_files" for details.
+rule java.lang.EnumDesc java.lang.Enum$EnumDesc

@@ -1,0 +1,89 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+/*
+ * Copyright (C) {{year}}, Google Inc.
+ *
+ * tracepoints.h - Tracepoints with lttng
+ *
+ * This file is auto-generated. Do not edit.
+ */
+#ifndef __LIBCAMERA_INTERNAL_TRACEPOINTS_H__
+#define __LIBCAMERA_INTERNAL_TRACEPOINTS_H__
+
+#if HAVE_PERFETTO
+
+#include <perfetto/perfetto.h>
+
+PERFETTO_DEFINE_CATEGORIES(
+	perfetto::Category("libcamera")
+		.SetDescription("Events from libcamera"));
+
+#define LIBCAMERA_TRACEPOINT(t_name, ...) \
+LIBCAMERA_TRACE_EVENT_##t_name(__VA_ARGS__)
+
+#define LIBCAMERA_TRACEPOINT_IPA_BEGIN(pipe, func) \
+LIBCAMERA_TRACE_EVENT_ipa_call_begin(#pipe, #func)
+
+#define LIBCAMERA_TRACEPOINT_IPA_END(pipe, func) \
+LIBCAMERA_TRACE_EVENT_ipa_call_end(#pipe, #func)
+
+#elif HAVE_LTTNG /* !HAVE_PERFETTO */
+#define LIBCAMERA_TRACEPOINT(...) tracepoint(libcamera, __VA_ARGS__)
+
+#define LIBCAMERA_TRACEPOINT_IPA_BEGIN(pipe, func) \
+tracepoint(libcamera, ipa_call_begin, #pipe, #func)
+
+#define LIBCAMERA_TRACEPOINT_IPA_END(pipe, func) \
+tracepoint(libcamera, ipa_call_end, #pipe, #func)
+
+#else /* !HAVE_PERFETTO && !HAVE_LTTNG */
+
+namespace {
+
+template <typename ...Args>
+inline void unused([[maybe_unused]] Args&& ...args)
+{
+}
+
+} /* namespace */
+
+#define LIBCAMERA_TRACEPOINT(category, ...) unused(__VA_ARGS__)
+
+#define LIBCAMERA_TRACEPOINT_IPA_BEGIN(pipe, func)
+#define LIBCAMERA_TRACEPOINT_IPA_END(pipe, func)
+
+#endif /* HAVE_PERFETTO */
+
+#endif /* __LIBCAMERA_INTERNAL_TRACEPOINTS_H__ */
+
+#if HAVE_PERFETTO || HAVE_LTTNG
+
+#if HAVE_PERFETTO
+
+#include <perfetto/perfetto.h>
+
+#else /* HAVE_LTTNG */
+
+#undef TRACEPOINT_PROVIDER
+#define TRACEPOINT_PROVIDER libcamera
+
+#undef TRACEPOINT_INCLUDE
+#define TRACEPOINT_INCLUDE "{{path}}"
+
+#endif /* HAVE_PERFETTO */
+
+#if !defined(INCLUDE_LIBCAMERA_INTERNAL_TRACEPOINTS_TP_H) || defined(TRACEPOINT_HEADER_MULTI_READ)
+#define INCLUDE_LIBCAMERA_INTERNAL_TRACEPOINTS_TP_H
+
+#if HAVE_LTTNG
+#include <lttng/tracepoint.h>
+#endif  /* HAVE_LTTNG */
+
+{{source}}
+
+#endif /* INCLUDE_LIBCAMERA_INTERNAL_TRACEPOINTS_TP_H */
+
+#if HAVE_LTTNG
+#include <lttng/tracepoint-event.h>
+#endif  /* HAVE_LTTNG */
+
+#endif /* HAVE_PERFETTO || HAVE_LTTNG */

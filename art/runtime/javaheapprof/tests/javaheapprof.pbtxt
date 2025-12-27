@@ -1,0 +1,17 @@
+buffers {
+  size_kb: 65536
+  fill_policy: DISCARD
+}
+data_sources {
+  config {
+    name: "android.heapprofd"
+    heapprofd_config {
+      sampling_interval_bytes: 4096
+      process_cmdline: "android.test.javaheapprof"
+      shmem_size_bytes: 8388608
+      block_client: true
+      heaps: "com.android.art"
+    }
+  }
+}
+duration_ms: 60000;

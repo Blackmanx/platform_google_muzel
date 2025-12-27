@@ -1,0 +1,7 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_security_pkcs"
+    }
+  ]
+}

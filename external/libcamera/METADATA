@@ -1,0 +1,18 @@
+name: "libcamera"
+description:
+    "An open source camera stack and framework for Linux, Android, and "
+    "ChromeOS. This is imported from ChromeOS' version, which is not fully "
+    "synchronized to the upstream version."
+
+third_party {
+homepage: "https://libcamera.org/"
+  identifier {
+    type: "Git"
+    value: "https://chromium.googlesource.com/chromiumos/third_party/libcamera"
+    primary_source: true
+    version: "mtkisp7"
+  }
+  version: "mtkisp7"
+  last_upgrade_date { year: 2025 month: 4 day: 23 }
+  license_type: RESTRICTED
+}

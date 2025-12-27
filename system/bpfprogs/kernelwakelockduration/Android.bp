@@ -1,0 +1,87 @@
+//
+// Copyright (C) 2025 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package {
+    default_team: "trendy_team_pixel_data_engineering",
+    default_applicable_licenses: ["system_bpfprogs_license"],
+}
+
+team {
+    name: "trendy_team_pixel_data_engineering",
+
+    // go/trendy/manage/engineers/5051504534061056
+    trendy_team_id: "5051504534061056",
+}
+
+libbpf_prog {
+    name: "kernelWakelockDuration.bpf",
+    srcs: ["kernelWakelockDuration.c"],
+    header_libs: [
+        "android_bpf_defs",
+        "bpf_prog_headers",
+        "libcutils_headers",
+    ],
+}
+
+genrule {
+    name: "kernelWakelockDurationTest",
+    srcs: [
+        "kernelWakelockDuration.c",
+    ],
+    out: [
+        "kernelWakelockDurationTest.c",
+    ],
+    cmd: "cp $(in) $(out)",
+}
+
+// This program is only used in tests to avoid testing on the same program
+// that is attached to real tracepoints, as it would influence the test results.
+libbpf_prog {
+    name: "kernelWakelockDurationTest.bpf",
+    srcs: [":kernelWakelockDurationTest"],
+    header_libs: [
+        "android_bpf_defs",
+        "bpf_prog_headers",
+        "libcutils_headers",
+    ],
+}
+
+cc_test {
+    name: "kernelWakelockDuration_test",
+    srcs: [
+        "kernelWakelockDuration_test.cpp",
+    ],
+    defaults: [
+        "aconfig_lib_cc_shared_link.defaults",
+        "bpf_cc_defaults",
+    ],
+    header_libs: [
+        "bpf_headers",
+        "bpf_prog_headers",
+    ],
+    shared_libs: [
+        "libbase",
+        "libbpf_bcc",
+        "libbpf_minimal",
+        "liblog",
+        "server_configurable_flags",
+    ],
+    static_libs: [
+        "android.bpfprogs.flags-aconfig-cpp",
+    ],
+    require_root: true,
+    test_suites: ["device-tests"],
+}

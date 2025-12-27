@@ -1,0 +1,1 @@
+Test for merging `HCondition` to the user with the "emited at use site" approach.

@@ -1,0 +1,20 @@
+IfXLtzAElseB(-7): A
+IfXLtzAElseB(42): B
+IfXLtzAElseB_Move(-7): A
+IfXLtzAElseB_Move(42): B
+IfXLtzAElseB_EnvUse(-7): A
+IfXLtzAElseB_EnvUse(42): B
+IfXNullAElseB(null): A
+IfXNullAElseB(new Object()): B
+IfXNullAElseB_Move(null): A
+IfXNullAElseB_Move(new Object()): B
+IfXNullAElseB_EnvUse(null): A
+IfXNullAElseB_EnvUse(new Object()): B
+IfXNullAElseB_RefNoEnvInBlock(null, true): A
+IfXNullAElseB_RefNoEnvInBlock(new Object(), true): B
+IfXNullAElseB_RefNoEnvInBlock(null, false): C
+IfXNullAElseB_RefNoEnvInBlock(new Object(), false): C
+IfLt7_0AElseB_86LoadFromConstantTable(2.0, true): A
+IfLt7_0AElseB_86LoadFromConstantTable(10.0, true): B
+IfLt7_0AElseB_86LoadFromConstantTable(2.0, false): C
+IfLt7_0AElseB_86LoadFromConstantTable(10.0, false): C

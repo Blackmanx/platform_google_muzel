@@ -1,0 +1,30 @@
+{
+  "SPDXID" : "SPDXRef-DOCUMENT",
+  "spdxVersion" : "SPDX-2.3",
+  "creationInfo" : {
+    "created" : "2025-08-06T14:44:31Z",
+    "creators" : [ "Tool: spdx-gradle-plugin", "Organization: JetBrains s.r.o." ]
+  },
+  "name" : "kotlin-build-tools-api",
+  "dataLicense" : "CC0-1.0",
+  "documentNamespace" : "https://www.jetbrains.com/spdxdocs/c5321920-5cec-4fc8-95bc-aaea0c1a600f",
+  "packages" : [ {
+    "SPDXID" : "SPDXRef-gnrtd0",
+    "copyrightText" : "NOASSERTION",
+    "description" : "",
+    "downloadLocation" : "NOASSERTION",
+    "filesAnalyzed" : false,
+    "licenseConcluded" : "NOASSERTION",
+    "licenseDeclared" : "NOASSERTION",
+    "licenseInfoFromFiles" : [ ],
+    "name" : "kotlin-build-tools-api",
+    "sourceInfo" : "git+https://github.com/JetBrains/kotlin.git@v2.2.0#kotlin-build-tools-api[:compiler:build-tools:kotlin-build-tools-api]",
+    "supplier" : "Organization: JetBrains s.r.o.",
+    "versionInfo" : "2.2.0"
+  } ],
+  "relationships" : [ {
+    "spdxElementId" : "SPDXRef-DOCUMENT",
+    "relationshipType" : "DESCRIBES",
+    "relatedSpdxElement" : "SPDXRef-gnrtd0"
+  } ]
+}

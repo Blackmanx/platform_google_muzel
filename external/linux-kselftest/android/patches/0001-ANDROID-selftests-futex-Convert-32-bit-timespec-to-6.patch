@@ -1,0 +1,63 @@
+From fa34ad2faead2769b0269d16db99bbe2d4c41928 Mon Sep 17 00:00:00 2001
+From: Terry Tritton <terry.tritton@linaro.org>
+Date: Fri, 4 Jul 2025 20:02:34 +0100
+Subject: [PATCH] ANDROID: selftests/futex: Convert 32-bit timespec to 64-bit
+ version for 32-bit compatibility mode
+
+sys_futex_wait() expects a struct __kernel_timespec pointer for the
+timeout, but the provided struct timespec pointer is of type struct
+old_timespec32 when compiled for 32-bit architectures, unless they use
+64-bit timespecs already.
+
+Make it work for all variants by converting the provided timespec value
+into a local struct __kernel_timespec and provide a pointer to it to the
+syscall. This is a pointless operation for 64-bit, but this is not a
+hotpath operation, so keep it simple.
+
+This fix is based off [1]
+
+Originally-by: Wei Gao <wegao@suse.com>
+Signed-off-by: Terry Tritton <terry.tritton@linaro.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250704190234.14230-1-terry.tritton@linaro.org
+Link: https://lore.kernel.org/all/20231203235117.29677-1-wegao@suse.com/ [1]
+(cherry picked from commit d0a48dc4df5c986bf8c3caf4d8fc15c480273052
+ https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/urgent)
+Test: atest -a vts_linux_kselftest_arm_32:futex_functional_run.sh_arm_32
+Test: atest -a vts_linux_kselftest_arm_64:futex_functional_run.sh_arm_64
+
+Bug: 422759683
+Test: atest -a vts_linux_kselftest_x86_64
+Change-Id: I0a58c951bbc08120a3910e35644ff6cfec5c852c
+Signed-off-by: Wake Liu <wakel@google.com>
+---
+ tools/testing/selftests/futex/include/futex2test.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/futex/include/futex2test.h b/tools/testing/selftests/futex/include/futex2test.h
+index 9d305520e849b..b8618b88fa591 100644
+--- a/tools/testing/selftests/futex/include/futex2test.h
++++ b/tools/testing/selftests/futex/include/futex2test.h
+@@ -4,6 +4,7 @@
+  *
+  * Copyright 2021 Collabora Ltd.
+  */
++#include <linux/time_types.h>
+ #include <stdint.h>
+ 
+ #define u64_to_ptr(x) ((void *)(uintptr_t)(x))
+@@ -18,5 +19,10 @@
+ static inline int futex_waitv(volatile struct futex_waitv *waiters, unsigned long nr_waiters,
+ 			      unsigned long flags, struct timespec *timo, clockid_t clockid)
+ {
+-	return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, timo, clockid);
++		struct __kernel_timespec ts = {
++			.tv_sec = timo->tv_sec,
++			.tv_nsec = timo->tv_nsec,
++		};
++
++		return syscall(__NR_futex_waitv, waiters, nr_waiters, flags, &ts, clockid);
+ }
+-- 
+2.50.1.703.g449372360f-goog
+

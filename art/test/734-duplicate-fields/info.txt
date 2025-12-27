@@ -1,0 +1,3 @@
+Regression test for duplicate static/instance fields, where the runtime would
+have non-deterministic behavior. We now fail dex verification in the presence of
+duplicate instance/static fields.

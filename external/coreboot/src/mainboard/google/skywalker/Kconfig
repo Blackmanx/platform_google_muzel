@@ -1,0 +1,71 @@
+## SPDX-License-Identifier: GPL-2.0-only OR MIT
+
+# Umbrella option to be selected by variant boards.
+config BOARD_GOOGLE_SKYWALKER_COMMON
+	def_bool BOARD_GOOGLE_ANAKIN || \
+		 BOARD_GOOGLE_BAZE || \
+		 BOARD_GOOGLE_OBIWAN || \
+		 BOARD_GOOGLE_SKYWALKER || \
+		 BOARD_GOOGLE_YODA
+
+if BOARD_GOOGLE_SKYWALKER_COMMON
+
+config SKYWALKER_SDCARD_INIT
+	def_bool BOARD_GOOGLE_SKYWALKER
+
+config VBOOT
+	select EC_GOOGLE_CHROMEEC_SWITCHES
+	select VBOOT_VBNV_FLASH
+
+config BOARD_SPECIFIC_OPTIONS
+	def_bool y
+	select SOC_MEDIATEK_MT8189
+	select BOARD_ROMSIZE_KB_8192
+	select MAINBOARD_HAS_CHROMEOS
+	select CHROMEOS_USE_EC_WATCHDOG_FLAG if CHROMEOS
+	select COMMON_CBFS_SPI_WRAPPER
+	select SPI_FLASH
+	select SPI_FLASH_INCLUDE_ALL_DRIVERS
+	select MAINBOARD_HAS_NATIVE_VGA_INIT
+	select HAVE_LINEAR_FRAMEBUFFER
+	select EC_GOOGLE_CHROMEEC
+	select EC_GOOGLE_CHROMEEC_BOARDID
+	select EC_GOOGLE_CHROMEEC_SPI
+	select I2C_TPM if VBOOT
+	select MAINBOARD_HAS_TPM2 if VBOOT
+	select TPM_GOOGLE_TI50 if VBOOT
+	select FW_CONFIG
+	select FW_CONFIG_SOURCE_CHROMEEC_CBI
+	select RTC
+	select COMMONLIB_STORAGE
+	select COMMONLIB_STORAGE_MMC
+
+config MAINBOARD_DIR
+	string
+	default "google/skywalker"
+
+config MAINBOARD_PART_NUMBER
+	string
+	default "Anakin" if BOARD_GOOGLE_ANAKIN
+	default "Baze" if BOARD_GOOGLE_BAZE
+	default "Obiwan" if BOARD_GOOGLE_OBIWAN
+	default "Skywalker" if BOARD_GOOGLE_SKYWALKER
+	default "Yoda" if BOARD_GOOGLE_YODA
+
+config BOOT_DEVICE_SPI_FLASH_BUS
+	int
+	default 7
+
+config EC_GOOGLE_CHROMEEC_SPI_BUS
+	hex
+	default 0x0
+
+config DRIVER_TPM_I2C_BUS
+	hex
+	default 0x3
+
+config DRIVER_TPM_I2C_ADDR
+	hex
+	default 0x50
+
+endif

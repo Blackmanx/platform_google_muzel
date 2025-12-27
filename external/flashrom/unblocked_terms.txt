@@ -1,0 +1,8 @@
+black.?list
+dummy
+master
+\b(in)?sane(\b|\d)
+sanity
+slave
+white.?list
+\bwtf

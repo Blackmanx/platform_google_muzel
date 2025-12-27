@@ -1,0 +1,2 @@
+Check that Thread.setName() and Thread.getName() generally behave reasonably,
+and particularly that the pthread name gets set as expected.

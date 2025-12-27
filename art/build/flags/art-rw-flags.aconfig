@@ -1,0 +1,132 @@
+# Copyright (C) 2025 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+package: "com.android.art.rw.flags"
+container: "com.android.art"
+
+# No flags here can be used in libcore in Java. It should only contain read-write flags in this
+# file. Read-only flags should go into the art-flags.aconfig file instead.
+
+flag {
+  name: "test_rw_flag"
+  namespace: "core_libraries"
+  description: "Permanent test read-write flag."
+  bug: "391379705"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+# Flag for using userfaultfd move ioctl in CMC
+flag {
+  name: "use_uffd_move_ioctl_cmc_gc"
+  namespace: "art_performance"
+  description: "Try to use userfaultfd's move ioctl in CMC GC. We may not be able to use it if "
+  "1. the kernel doesn't support it (<6.1), or "
+  "2. the necessary kernel bug-fixes aren't there, or "
+  "3. app's seccomp filter doesn't allow it."
+  bug: "343220989"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "enable_time_based_gc_triggering"
+  namespace: "system_performance"
+  description: "Enable support for time based GC triggering strategy"
+  bug: "425665469"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "post_ur_job"
+  namespace: "art_cloud"
+  description: "Flag to enable post unattended reboot job."
+  bug: "426478053"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "assume_value_sdk_int"
+  namespace: "system_performance"
+  description: "Flag to enable use of SDK_INT as a compile-time constant"
+  bug: "204924812"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "enable_profile_code_rw"
+  namespace: "art_performance"
+  description: "Flag to control on-demand method tracing feature"
+  bug: "352518093"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "madvise_dex_using_profile"
+  namespace: "system_performance"
+  description: "Flag to enable madvise of vdex using startup hints from the profile"
+  bug: "358590127"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "madvise_type_lookup_table"
+  namespace: "system_performance"
+  description: "Flag to enable explicit madvise of the vdex type lookup table"
+  bug: "428102886"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+  name: "pm_compile_verbose_logging"
+  namespace: "art_cloud"
+  description: "Flag to enable more verbose logging for the \"pm compile\" command"
+  bug: "441818922"
+  is_fixed_read_only: false
+  is_exported: false
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "read_only_dynamic_code_load_ww_log"
+    is_exported: false
+    description: "This flag controls if the system logs to WW when loading native code and read only is not enforced"
+    bug: "408070506"
+    is_fixed_read_only: false
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "read_only_dynamic_code_load_throw_exception"
+    is_exported: false
+    description: "This flag controls if the system throws an exception when loading native code and read only is not enforced"
+    bug: "408070506"
+    is_fixed_read_only: false
+}
+
+
+flag {
+  name: "dynamic_instrumentation_method_entry_hook"
+  namespace: "responsible_apis"
+  description: "Flag to inject the method entry hook when dynamic instrumentation is requested"
+  bug: "408255571"
+  is_fixed_read_only: false
+  is_exported: false
+}

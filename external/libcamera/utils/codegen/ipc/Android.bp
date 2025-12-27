@@ -1,0 +1,46 @@
+python_binary_host {
+    name: "libcamera_ipc_parser_host",
+    srcs: [
+        "parser.py",
+    ],
+    main: "parser.py",
+    libs: [
+        "libcamera_mojom_parser_host",
+    ],
+}
+
+python_binary_host {
+    name: "libcamera_ipc_generate_host",
+    srcs: [
+        "generate.py",
+    ],
+    main: "generate.py",
+    libs: [
+        "libcamera_mojom_bindings_generator_host",
+    ],
+}
+
+genrule {
+    name: "libcamera_mojom_templates",
+    srcs: [
+        "generators/libcamera_templates/core_ipa_interface.h.tmpl",
+        "generators/libcamera_templates/core_ipa_serializer.h.tmpl",
+        "generators/libcamera_templates/definition_functions.tmpl",
+        "generators/libcamera_templates/module_ipa_interface.h.tmpl",
+        "generators/libcamera_templates/module_ipa_proxy.cpp.tmpl",
+        "generators/libcamera_templates/module_ipa_proxy.h.tmpl",
+        "generators/libcamera_templates/module_ipa_proxy_worker.cpp.tmpl",
+        "generators/libcamera_templates/module_ipa_serializer.h.tmpl",
+        "generators/libcamera_templates/proxy_functions.tmpl",
+        "generators/libcamera_templates/serializer.tmpl",
+    ],
+    tools: ["libcamera_ipc_generate_host"],
+    cmd: "$(location libcamera_ipc_generate_host)" +
+        " precompile" +
+        " --sample_precompile_template $(location generators/libcamera_templates/core_ipa_interface.h.tmpl)" +
+        " --output_file $(genDir)/utils/codegen/ipc/libcamera_templates.zip",
+    // TODO: check on -o
+    out: [
+        "utils/codegen/ipc/libcamera_templates.zip",
+    ],
+}

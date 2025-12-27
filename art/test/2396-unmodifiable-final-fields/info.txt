@@ -1,0 +1,8 @@
+Following fields are not allowed to be modified once they are initialized:
+  * Fields of record classes.
+  * Final fields of classes from java.lang.invoke package and Atomic*FieldUpdater impl classes.
+  * `static final` fields of MethodHandle, VarHandle or Atomic*FieldUpdater types on app targeting
+     Android C or higher.
+
+Starting from Android C on apps targeting Android C and higher all static final fields are
+unmodifiable.

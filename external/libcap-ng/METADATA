@@ -1,0 +1,20 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/libcap-ng
+# For more info, check https://cs.android.com/android/platform/superproject/+/main:tools/external_updater/README.md
+
+name: "libcap-ng"
+description: "Libcap-ng is a library for Linux that makes using posix capabilities easy."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2024
+    month: 7
+    day: 30
+  }
+  homepage: "https://github.com/stevegrubb/libcap-ng"
+  identifier {
+    type: "Archive"
+    value: "https://github.com/stevegrubb/libcap-ng/archive/v0.8.5.tar.gz"
+    version: "v0.8.5"
+  }
+}

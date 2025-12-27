@@ -1,0 +1,3 @@
+Test that we successfully intrinsify VarHandle's getAndUpdate intrinsics
+when the return value is ignored by the VarHandle call specifying a void
+return type.

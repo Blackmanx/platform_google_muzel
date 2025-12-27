@@ -1,0 +1,20 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/liburing
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "liburing"
+description: "io_uring userspace library"
+third_party {
+  license_type: NOTICE
+  last_upgrade_date {
+    year: 2025
+    month: 10
+    day: 1
+  }
+  homepage: "https://github.com/axboe/liburing"
+  identifier {
+    type: "Git"
+    value: "https://github.com/axboe/liburing"
+    version: "f22f2fb4341afbe755870b0e7dd1b680dbb5bb8f"
+  }
+}

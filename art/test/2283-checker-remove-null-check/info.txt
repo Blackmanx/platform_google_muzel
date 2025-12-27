@@ -1,0 +1,1 @@
+Tests we remove null checks for known-not-null SSA variables after GVN

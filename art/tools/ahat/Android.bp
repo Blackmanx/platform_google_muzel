@@ -1,0 +1,102 @@
+// Copyright 2018 Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package {
+    default_applicable_licenses: ["art_license"],
+}
+
+// --- ahat.jar ----------------
+java_binary_host {
+    name: "ahat",
+    visibility: [
+        "//libcore/metrictests/memory/host",
+    ],
+    wrapper: "ahat.sh",
+    srcs: ["src/main/**/*.java"],
+    manifest: "etc/ahat.mf",
+    java_resources: ["etc/style.css"],
+    // Use a relaxed version to allow distribution against older runtimes.
+    java_version: "11",
+    javacflags: ["-Xdoclint:all/protected"],
+}
+
+// --- ahat-test-dump.jar --------------
+java_test_helper_library {
+    name: "ahat-test-dump",
+    srcs: ["src/test-dump/**/*.java"],
+    sdk_version: "core_platform",
+    optimize: {
+        obfuscate: true,
+        enabled: true,
+        proguard_flags_files: ["etc/test-dump.pro"],
+    },
+}
+
+// --- ahat-ri-test-dump.jar -------
+java_test_helper_library {
+    host_supported: true,
+    device_supported: false,
+    name: "ahat-ri-test-dump",
+    srcs: ["src/ri-test-dump/**/*.java"],
+}
+
+java_binary_host {
+    name: "ahat-ri-test-dump-bin",
+    static_libs: ["ahat-ri-test-dump"],
+    main_class: "Main",
+}
+
+cc_library_shared {
+    name: "libahat-test-jni",
+    srcs: ["src/test/jni/**/*.cpp"],
+    header_libs: ["jni_headers"],
+    host_supported: true,
+}
+
+java_genrule {
+    name: "ahat-test-dump-gen",
+    srcs: [
+        "ahat-test-dump-gen.sh.in",
+        ":ahat-test-dump",
+    ],
+    out: ["ahat-test-dump-gen.sh"],
+    cmd: "sed -e s=@AHAT_TEST_DUMP_JAR@=$(location :ahat-test-dump)= $(location ahat-test-dump-gen.sh.in) > $(out)",
+}
+
+// Run ahat-ri-test-dump to generate ri-test-dump.hprof
+genrule {
+    name: "ahat_ri_test_dump_hprof",
+    out: ["ri-test-dump.hprof"],
+    tools: ["ahat-ri-test-dump-bin"],
+    cmd: "$(location ahat-ri-test-dump-bin) $(out)",
+}
+
+// To run these tests, use: atest ahat-tests --host
+java_test_host {
+    name: "ahat-tests",
+    srcs: ["src/test/**/*.java"],
+    manifest: "etc/ahat-tests.mf",
+    java_resources: [
+        ":ahat_ri_test_dump_hprof",
+        ":ahat-tests-res",
+    ],
+    static_libs: [
+        "ahat",
+        "junit-host",
+    ],
+    test_options: {
+        unit_test: true,
+    },
+    test_suites: ["general-tests"],
+}

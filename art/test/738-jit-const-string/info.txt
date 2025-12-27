@@ -1,0 +1,1 @@
+Test that a string in JIT compiled method's root table is not unloaded.

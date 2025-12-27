@@ -1,0 +1,3 @@
+rule com.android.internal.** com.android.neuralnetworks.framework.jarjar.@0
+rule android.app.ondeviceintelligence.flags.** com.android.neuralnetworks.framework.jarjar.@0
+rule com.android.modules.utils.HandlerExecutor com.android.neuralnetworks.framework.jarjar.HandlerExecutor

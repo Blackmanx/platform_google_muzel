@@ -1,0 +1,3 @@
+main: public static void art.Test2282.run() throws java.lang.Exception @ line = 75 caught class art.Test2282$TestException: Test
+Single step: public static void art.Test2282.run() throws java.lang.Exception @ line=77
+Caught TestException

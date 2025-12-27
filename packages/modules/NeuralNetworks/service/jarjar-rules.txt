@@ -1,0 +1,5 @@
+rule com.android.modules.utils.BasicShellCommandHandler com.android.neuralnetworks.service.jarjar.BasicShellCommandHandler
+rule android.app.ondeviceintelligence.flags.** com.android.neuralnetworks.service.jarjar.@0
+rule com.google.protobuf.** com.android.neuralnetworks.service.jarjar.@0
+rule com.android.server.ondeviceintelligence.nano.** com.android.neuralnetworks.service.jarjar.nano.@0
+rule com.android.modules.utils.HandlerExecutor com.android.neuralnetworks.service.jarjar.HandlerExecutor

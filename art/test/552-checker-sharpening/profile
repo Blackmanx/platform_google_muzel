@@ -1,0 +1,15 @@
+LAppImageClass;
+HSPLMain;->testSimple(I)I
+HSPLMain;->testSimpleAppImage(I)I
+HSPLMain;->testDiamond(ZI)I
+HSPLMain;->testLoop([II)I
+HSPLMain;->testLoopWithDiamond([IZI)I
+HSPLMain;->$noinline$getBootImageString()Ljava/lang/String;
+HSPLMain;->$noinline$getNonBootImageString()Ljava/lang/String;
+HSPLMain;->$noinline$getStringClass()Ljava/lang/Class;
+HSPLMain;->$noinline$getOtherClass()Ljava/lang/Class;
+HSPLMain;->$noinline$getAppImageClass()Ljava/lang/Class;
+HSPLMain;->$noinline$toHexString(I)Ljava/lang/String;
+HSPLMain;->$noinline$toHexStringIndirect(I)Ljava/lang/String;
+HSPLMain;->$noinline$foo()V
+HSPLMulti;->localToHexString()Ljava/lang/String;

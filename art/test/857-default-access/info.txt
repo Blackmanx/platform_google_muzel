@@ -1,0 +1,2 @@
+Regression test for default interface methods which used to be able to access
+private methods.

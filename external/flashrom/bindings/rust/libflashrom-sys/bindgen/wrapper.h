@@ -1,0 +1,8 @@
+// C header wrapper for the rust-bindgen process.
+
+#ifndef FLASHROM_BINDINGS_RUST_LIBFLASHROM_SYS_SRC_WRAPPER_H_
+#define FLASHROM_BINDINGS_RUST_LIBFLASHROM_SYS_SRC_WRAPPER_H_
+
+#include "libflashrom.h"
+
+#endif  // FLASHROM_BINDINGS_RUST_LIBFLASHROM_SYS_SRC_WRAPPER_H_

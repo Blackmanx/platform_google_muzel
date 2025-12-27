@@ -1,0 +1,1 @@
+Tests that AOT code is used if available after tracing has stopped.

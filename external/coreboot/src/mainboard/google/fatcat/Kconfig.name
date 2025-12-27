@@ -1,0 +1,39 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+comment "Fatcat"
+
+config BOARD_GOOGLE_FATCAT
+	bool "-> Fatcat"
+
+config BOARD_GOOGLE_FATCAT4ES
+	bool "-> Fatcat4ES"
+
+config BOARD_GOOGLE_FATCATISH
+	bool "-> Fatcat_ish"
+
+config BOARD_GOOGLE_FATCATITE
+	bool "-> Fatcatite"
+
+config BOARD_GOOGLE_FATCATITE4ES
+	bool "-> Fatcatite4ES"
+
+config BOARD_GOOGLE_FATCATNUVO
+	bool "-> Fatcatnuvo"
+
+config BOARD_GOOGLE_FATCATNUVO4ES
+	bool "-> Fatcatnuvo4ES"
+
+config BOARD_GOOGLE_FELINO
+	bool "-> Felino"
+
+config BOARD_GOOGLE_FELINO4ES
+	bool "-> Felino4ES"
+
+config BOARD_GOOGLE_FRANCKA
+	bool "-> Francka"
+
+config BOARD_GOOGLE_KINMEN4ES
+	bool "-> Kinmen4ES"
+
+config BOARD_GOOGLE_KINMEN
+	bool "-> Kinmen"

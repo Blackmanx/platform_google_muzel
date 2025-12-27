@@ -1,0 +1,1 @@
+Test optimizations that differentiate between objects being present in or absent from the app image.

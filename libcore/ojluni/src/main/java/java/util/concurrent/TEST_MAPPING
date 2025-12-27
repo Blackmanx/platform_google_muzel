@@ -1,0 +1,12 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreJsr166TestCases",
+      "options": [
+        {
+          "include-filter": "jsr166"
+        }
+      ]
+    }
+  ]
+}

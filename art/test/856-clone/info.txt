@@ -1,0 +1,2 @@
+Regression test for calling `Object.clone` from within an default interface
+method.

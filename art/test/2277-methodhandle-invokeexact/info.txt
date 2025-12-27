@@ -1,0 +1,2 @@
+More MethodHandle.invokeExact tests.
+Here we also add multidex calls to verify implementation details.

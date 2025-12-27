@@ -1,0 +1,7 @@
+{
+  "module_name_overrides": {
+    "libzerocopy": "libzerocopy-0.7.35"
+  },
+  "run_cargo": false,
+  "tests": true
+}

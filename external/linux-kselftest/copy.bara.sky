@@ -1,0 +1,46 @@
+core.workflow(
+    name = "selftest_mirror",
+
+    # Origin: android/kernel/common's android-mainline branch.
+    origin = git.origin(
+        url = "rpc://android/kernel/common",
+        ref = "android-mainline",
+    ),
+
+    # Destination: googleplex-android/platform/superproject's main branch.
+    destination = git.destination(
+        url = "rpc://googleplex-android/platform/superproject",
+        push = "main",
+    ),
+
+    # Source files: Sync files under tools/testing/selftests/**, excluding all TEST_MAPPING files.
+    origin_files = glob(
+        ["tools/testing/selftests/**"],
+        exclude = ["**/TEST_MAPPING", "**/*.xml"],
+    ),
+
+    # Authoring: Pass through the original author, with a default for cases where
+    # the author can't be identified.
+    authoring = authoring.pass_thru(default = "No Reply <no-reply@google.com>"),
+
+    # Transformations to handle path mapping.
+    transformations = [
+        # Move all files from the "tools/testing/selftests" path
+        # to the new path "external/linux-kselftest/tools/testing/selftests".
+        core.move(
+            before = "tools/testing/selftests",
+            after = "external/linux-kselftest/tools/testing/selftests"
+        ),
+    ],
+
+    # Use ITERATIVE mode to apply each source commit individually, preserving commit history.
+    mode = "ITERATIVE",
+
+)
+
+service.migration(
+    migration_name = "selftest_mirror",
+    owner_mdb = "wakel",
+    contact_email = "wakel@google.com",
+    triggering = "DAILY",
+)

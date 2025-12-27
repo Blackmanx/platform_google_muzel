@@ -1,0 +1,305 @@
+package {
+    default_applicable_licenses: ["external_flashrom_license"],
+}
+
+license {
+    name: "external_flashrom_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-GPL",
+        "SPDX-license-identifier-GPL-2.0",
+    ],
+    license_text: [
+        "COPYING",
+        "LICENSE",
+    ],
+}
+
+genrule {
+    name: "flashrom_version.h",
+    visibility: ["//external/flashrom/bindings/rust/libflashrom"],
+    srcs: ["VERSION"],
+    cmd: "cat $(in) | xargs printf -- '#define FLASHROM_VERSION \"%s\"\n' > $(out)",
+    out: ["flashrom_version.h"],
+}
+
+cc_defaults {
+    name: "flashrom_defaults",
+    host_supported: true,
+    cflags: [
+        "-Os",
+        "-std=c99",
+        "-Werror",
+        "-Wshadow",
+        "-Wmissing-prototypes",
+        "-Wwrite-strings",
+        "-Wno-gnu-pointer-arith",
+        "-Wno-unused-parameter",
+        "-Wno-address-of-packed-member",
+        "-Wno-enum-conversion",
+        "-Wno-missing-braces",
+
+        "-Wno-error=gnu-pointer-arith",
+
+        "-D_DEFAULT_SOURCE",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_BSD_SOURCE",
+        "-D__BSD_VISIBLE",
+        "-D__XSI_VISIBLE",
+        "-D_NETBSD_SOURCE",
+        "-D_DARWIN_C_SOURCE",
+
+        "-DCONFIG_DEFAULT_PROGRAMMER_NAME=&programmer_internal",
+        "-DCONFIG_DEFAULT_PROGRAMMER_ARGS=\"\"",
+        "-DCONFIG_DELAY_MINIMUM_SLEEP_US=100000",
+
+        "-DHAVE_CLOCK_GETTIME=1",
+        "-DHAVE_STRNLEN=1",
+        "-DHAVE_GETOPT_H=1",
+        "-DHAVE_PCIUTILS_PCI_H=1",
+        "-DHAVE_UTSNAME=1",
+
+        // Only LittleEndian platforms are supported. Feel free to add BigEndian support.
+        "-D__FLASHROM_LITTLE_ENDIAN__",
+        "-include flashrom_version.h",
+
+        // programmers config
+        "-DCONFIG_DUMMY=1",
+        "-DCONFIG_INTERNAL=1",
+        "-DCONFIG_INTERNAL_DMI=1",
+        "-DCONFIG_IT8212=1",
+        "-DCONFIG_LINUX_MTD=1",
+        "-DCONFIG_LINUX_SPI=1",
+        "-DCONFIG_MEDIATEK_I2C_SPI=1",
+        "-DCONFIG_PARADE_LSPCON=1",
+        "-DCONFIG_RAIDEN_DEBUG_SPI=1",
+        "-DCONFIG_REALTEK_MST_I2C_SPI=1",
+        "-DCONFIG_SERPROG=1",
+        "-DCONFIG_STLINKV3_SPI=1",
+
+        "-DCONFIG_CROS_EC=1",
+        "-DUSE_BIG_LOCK=1",
+    ],
+
+    generated_headers: ["flashrom_version.h"],
+
+    include_dirs: ["external/libusb/include/libusb"],
+
+    static_libs: ["libpci"],
+    shared_libs: ["libusb"],
+}
+
+cc_library {
+    name: "libflashrom",
+    defaults: ["flashrom_defaults"],
+    host_supported: true,
+    vendor_available: true,
+    recovery_available: true,
+    visibility: [
+        "//external/vboot_reference",
+        "//external/flashrom/bindings/rust/libflashrom",
+        "//external/flashrom/bindings/rust/libflashrom-sys",
+    ],
+    init_rc: ["flashrom.rc"],
+
+    target: {
+        linux: {
+            cflags: ["-DIS_WINDOWS=0"],
+            srcs: [
+                "custom_baud_linux.c",
+                "hwaccess_physmap.c",
+            ],
+        },
+        linux_x86: {
+            srcs: [
+                "hwaccess_x86_msr.c",
+                "hwaccess_x86_io.c",
+            ],
+        },
+        linux_x86_64: {
+            srcs: [
+                "hwaccess_x86_msr.c",
+                "hwaccess_x86_io.c",
+            ],
+        },
+        windows: {
+            cflags: ["-DIS_WINDOWS=1"],
+            srcs: ["custom_baud.c"],
+        },
+    },
+
+    arch: {
+        x86: {
+            srcs: [
+                "processor_enable.c",
+                "chipset_enable.c",
+                "board_enable.c",
+                "cbtable.c",
+                "internal.c",
+                "internal_par.c",
+                "it87spi.c",
+                "sb600spi.c",
+                "superio.c",
+                "amd_imc.c",
+                "wbsio_spi.c",
+                "mcp6x_spi.c",
+                "ichspi.c",
+                "dmi.c",
+                "pcidev.c",
+                "known_boards.c",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                "processor_enable.c",
+                "chipset_enable.c",
+                "board_enable.c",
+                "cbtable.c",
+                "internal.c",
+                "internal_par.c",
+                "it87spi.c",
+                "sb600spi.c",
+                "superio.c",
+                "amd_imc.c",
+                "wbsio_spi.c",
+                "mcp6x_spi.c",
+                "ichspi.c",
+                "dmi.c",
+                "pcidev.c",
+                "known_boards.c",
+            ],
+        },
+        arm: {
+            srcs: [
+                "board_enable.c",
+                "cbtable.c",
+                "chipset_enable.c",
+                "internal.c",
+                "internal_par.c",
+                "processor_enable.c",
+                "pcidev.c",
+                "known_boards.c",
+            ],
+        },
+        arm64: {
+            srcs: [
+                "board_enable.c",
+                "cbtable.c",
+                "chipset_enable.c",
+                "internal.c",
+                "internal_par.c",
+                "processor_enable.c",
+                "pcidev.c",
+                "known_boards.c",
+            ],
+        },
+        riscv64: {
+            srcs: [
+                "board_enable.c",
+                "cbtable.c",
+                "chipset_enable.c",
+                "internal.c",
+                "internal_par.c",
+                "processor_enable.c",
+                "pcidev.c",
+                "known_boards.c",
+            ],
+        },
+    },
+
+    srcs: [
+        "82802ab.c",
+        "at45db.c",
+        "bitbang_spi.c",
+        "edi.c",
+        "en29lv640b.c",
+        "erasure_layout.c",
+        "flashchips.c",
+        "flashrom.c",
+        "fmap.c",
+        "helpers.c",
+        "helpers_fileio.c",
+        "ich_descriptors.c",
+        "jedec.c",
+        "printlock.c",
+        "layout.c",
+        "libflashrom.c",
+        "opaque.c",
+        "parallel.c",
+        "print.c",
+        "programmer.c",
+        "programmer_table.c",
+        "s25f.c",
+        "sfdp.c",
+        "spi25.c",
+        "spi25_statusreg.c",
+        "spi95.c",
+        "spi.c",
+        "sst28sf040.c",
+        "sst49lfxxxc.c",
+        "sst_fwhub.c",
+        "stm50.c",
+        "w29ee011.c",
+        "w39.c",
+        "writeprotect.c",
+        "writeprotect_ranges.c",
+        "udelay.c",
+
+        "power.c",
+        "action_descriptor.c",
+        "flashchips_crosbl.c",
+        "cros_ec.c",
+        "big_lock.c",
+        "file_lock.c",
+
+        // Programmers
+        "dummyflasher.c",
+        "it8212.c",
+        "linux_mtd.c",
+        "linux_spi.c",
+        "parade_lspcon.c",
+        "i2c_helper_linux.c",
+        "mediatek_i2c_spi.c",
+        "raiden_debug_spi.c",
+        "usb_device.c",
+        "realtek_mst_i2c_spi.c",
+        "serprog.c",
+        "serial.c",
+        "stlinkv3_spi.c",
+        "usbdev.c",
+
+        // Platform
+        "platform/endian_little.c",
+        "platform/memaccess.c",
+    ],
+    export_include_dirs: ["include"],
+    static_libs: ["libz"],
+
+}
+
+cc_binary {
+    name: "flashrom",
+    visibility: ["//visibility:private"],
+    defaults: ["flashrom_defaults"],
+    vendor: true,
+
+    srcs: [
+        "cli_classic.c",
+        "cli_common.c",
+        "cli_output.c",
+    ],
+
+    shared_libs: ["libflashrom"],
+}
+
+filegroup {
+    name: "libap_wpsr_srcs",
+    visibility: [":__subpackages__"],
+    srcs: [
+        "flashchips.c",
+        "flashchips_crosbl.c",
+        "writeprotect.c",
+        "writeprotect_ranges.c",
+    ],
+}

@@ -1,0 +1,21 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/coreboot
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "coreboot"
+description: "coreboot is an extended firmware platform that delivers a lightning fast and secure boot experience on modern computers and embedded systems. As an Open Source project it provides auditability and maximum control over technology."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2025
+    month: 8
+    day: 6
+  }
+  homepage: "https://www.coreboot.org/"
+  identifier {
+    type: "Git"
+    value: "https://review.coreboot.org/coreboot.git"
+    version: "f01cc9258be9b0ebffaf9e265f4778d1aea048ff"
+    primary_source: true
+  }
+}

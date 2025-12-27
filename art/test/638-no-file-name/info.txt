@@ -1,0 +1,1 @@
+Test for b/146565491, test stack trace format if there is no file name

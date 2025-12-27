@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+chip soc/intel/skylake
+	device domain 0 on
+		device ref south_xhci on
+			register "usb2_ports" = "{
+				[5] = USB2_PORT_LONG(OC2),
+				[6] = USB2_PORT_LONG(OC3),
+				[7] = USB2_PORT_LONG(OC3),
+				[8] = USB2_PORT_MID(OC4),
+			}"
+
+			register "usb3_ports" = "{
+				[0] = USB3_PORT_DEFAULT(OC0),
+				[1] = USB3_PORT_DEFAULT(OC0),
+				[2] = USB3_PORT_DEFAULT(OC1),
+				[3] = USB3_PORT_DEFAULT(OC1),
+			}"
+		end
+		device ref sata		on
+			register "SataPortsEnable[3]"	= "1"
+		end
+		device ref pcie_rp1	on  end # COMe 4
+		device ref pcie_rp2	on  end # COMe 5
+		device ref pcie_rp3	on  end # COMe 6
+		device ref pcie_rp4	on  end # COMe 7
+		device ref pcie_rp12	on  end # COMe 3
+		device ref smbus	on
+			chip drivers/i2c/nct7802y
+				register "peci[0]" = "{ PECI_DOMAIN_0, 100 }"
+				register "fan[1].mode" = "FAN_SMART"
+				register "fan[1].smart.mode"	= "SMART_FAN_DUTY"
+				register "fan[1].smart.tempsrc"	= "TEMP_SOURCE_PECI_0"
+				register "fan[1].smart.table"	= "{ { 30, 40 },
+								     { 40, 48 },
+								     { 50, 60 },
+								     { 60, 76 } }"
+				register "fan[1].smart.critical_temp" = "80"
+
+				device i2c 0x2e on end
+			end
+		end
+	end
+end

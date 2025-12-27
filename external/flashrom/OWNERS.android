@@ -1,0 +1,6 @@
+include platform/system/core:main:/janitors/OWNERS
+
+czapiga@google.com
+bernacki@google.com
+
+include platform/vendor/google/desktop:main:/firmware-tool/OWNERS

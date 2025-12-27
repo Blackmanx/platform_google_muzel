@@ -1,0 +1,35 @@
+name: "dnsmasq"
+description: "Dnsmasq provides network infrastructure for small networks."
+third_party {
+  url {
+    type: HOMEPAGE
+    value: "https://thekelleys.org.uk/dnsmasq/"
+  }
+  url {
+    type: ARCHIVE
+    value: "http://www.thekelleys.org.uk/dnsmasq/dnsmasq-2.51.tar.gz"
+  }
+  version: "2.51"
+  license_type: RESTRICTED
+  security {
+    tag: "NVD-CPE2.3:cpe:/a:thekelleys:dnsmasq:2.51"
+    # This is a trimmed down and patched version of dnsmasq,
+    # so despite the old version number, many CVEs are not applicable.
+
+    # patch applied upstream:
+    # https://android.googlesource.com/platform/external/dnsmasq/+/b7ae3453bfcc139be75c8dec5cdb8a1453eb6e16.
+    mitigated_security_patch: "CVE-2017-14491"
+    # per b/295511003, SWE confirmed these CVEs are not applicable.
+    mitigated_security_patch: "CVE-2017-14492"
+    mitigated_security_patch: "CVE-2017-14493"
+    # per b/291402235, SWE confirmed these CVEs are not applicable.
+    mitigated_security_patch: "CVE-2020-25681"
+    mitigated_security_patch: "CVE-2020-25682"
+    mitigated_security_patch: "CVE-2017-14496"
+  }
+  last_upgrade_date {
+    year: 2010
+    month: 1
+    day: 20
+  }
+}

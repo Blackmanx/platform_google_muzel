@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration description="Test module config for JavaHeapProfTest">
+
+  <!-- selinux doesn't like the test doing Runtime.exec on trace_processor_shell. -->
+  <target_preparer class="com.android.tradefed.targetprep.DisableSELinuxTargetPreparer" />
+
+  <target_preparer class="com.android.tradefed.targetprep.TestAppInstallSetup">
+    <option name="test-file-name" value="JavaHeapProfTest.apk" />
+  </target_preparer>
+
+  <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
+    <option name="push-file" key="trace_processor_shell" value="/data/local/android.test.javaheapprof/trace_processor_shell" />
+    <option name="push-file" key="javaheapprof.pbtxt" value="/data/misc/perfetto-configs/javaheapprof.pbtxt" />
+    <option name="push-file" key="query.sql" value="/data/local/android.test.javaheapprof/query.sql" />
+  </target_preparer>
+
+  <test class="com.android.tradefed.testtype.AndroidJUnitTest">
+    <option name="package" value="android.test.javaheapprof"/>
+    <option name="runner" value="androidx.test.runner.AndroidJUnitRunner"/>
+  </test>
+</configuration>

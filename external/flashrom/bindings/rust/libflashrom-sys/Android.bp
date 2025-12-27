@@ -1,0 +1,66 @@
+package {
+    default_applicable_licenses: ["external_flashrom_license"],
+    default_team: "trendy_team_desktop_manufacturing_and_serviceability",
+}
+
+rust_bindgen {
+    name: "libflashrom_sys_bindgen",
+    host_supported: true,
+    crate_name: "flashrom_sys_bindgen",
+    wrapper_src: "bindgen/wrapper.h",
+    source_stem: "bindings",
+    static_libs: ["libflashrom"],
+    bindgen_flags: [
+        "--allowlist-function",
+        "flashrom_.*",
+        "--default-enum-style",
+        "newtype",
+        "--constified-enum",
+        "flashrom_log_level",
+        "--no-prepend-enum-name",
+        "--no-derive-copy",
+        "--must-use-type",
+        "flashrom_wp_result",
+        "--blocklist-function",
+        "flashrom_set_log_callback",
+        "--blocklist-type",
+        "flashrom_log_callback",
+        "--blocklist-type",
+        "va_list",
+        "--blocklist-type",
+        "__builtin_va_list",
+        "--blocklist-type",
+        "__va_list_tag",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    vendor_available: true,
+}
+
+rust_library {
+    name: "liblibflashrom_sys",
+    host_supported: true,
+    crate_name: "libflashrom_sys",
+    srcs: [":libflashrom_sys_bindgen"],
+    edition: "2021",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    vendor_available: true,
+}
+
+rust_test {
+    name: "libflashrom_sys_test_src_lib",
+    host_supported: true,
+    crate_name: "libflashrom_sys",
+    srcs: [":libflashrom_sys_bindgen"],
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    test_options: {
+        unit_test: true,
+    },
+    edition: "2021",
+}

@@ -1,0 +1,13 @@
+{
+  // A fake StatsD apex only used for ART chroot testing.
+  "name": "com.android.os.statsd",
+
+  // Placeholder module version to be replaced during build.
+  // Do not change!
+  "version": 0,
+
+  "provideNativeLibs": [
+    "libstatspull.so",
+    "libstatssocket.so"
+  ]
+}

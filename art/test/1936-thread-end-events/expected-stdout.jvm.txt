@@ -1,0 +1,49 @@
+Entered public static void art.Test1936.foo()
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered public static void java.lang.ref.Reference.reachabilityFence(java.lang.Object)
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered private void java.lang.Thread.exit()
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered jdk.internal.vm.ThreadContainer java.lang.Thread.threadContainer()
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered void java.lang.Thread.clearReferences()
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered public static void art.Test1936.NotifyThreadEnd(java.lang.Thread)
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+
+Entered public static void art.Test1936.foo()
+Thread: test-thread
+  | alive: true
+  | interrupted: false
+  | daemon: false
+  | group: java.lang.ThreadGroup[name=main,maxpri=10]
+

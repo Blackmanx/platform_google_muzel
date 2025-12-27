@@ -1,0 +1,61 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+
+/*
+ * \todo Document the interface and remove the related EXCLUDE_PATTERNS entry.
+ */
+
+module ipa.ipu7;
+
+import "include/libcamera/ipa/core.mojom";
+
+// each group shared one thread and one waiting condition
+enum IPC_CMD {
+    // worked in IPC_CCA group
+    IPC_CCA_GROUP_START,
+    IPC_CCA_INIT,
+    IPC_CCA_SET_STATS,
+    IPC_CCA_RUN_AEC,
+    IPC_CCA_RUN_AIQ,
+    IPC_CCA_GET_CMC,
+
+    IPC_CCA_GET_MKN,
+    IPC_CCA_GET_AIQD,
+    IPC_CCA_UPDATE_TUNING,
+    IPC_CCA_DEINIT,
+    IPC_CCA_GROUP_END,
+
+    IPC_CCA_PAC_GROUP_START,
+    IPC_CCA_REINIT_AIC,
+    IPC_CCA_CONFIG_AIC,
+    IPC_CCA_REGISTER_AIC_BUFFER,
+    IPC_CCA_GET_AIC_BUFFER,
+    IPC_CCA_UPDATE_CONFIG_RES,
+    IPC_CCA_RUN_AIC,
+    IPC_CCA_DECODE_STATS,
+    IPC_CCA_PAC_GROUP_END,
+};
+
+struct IPACmdInfo {
+    int32 cameraId;
+    int32 tuningMode;
+    uint32 cmd;
+    uint32 bufferId;
+};
+
+interface IPAIPU7Interface {
+    init(uint32 bufferId) => (int32 ret);
+
+    start() => (int32 ret);
+    stop();
+
+    [async] sendRequest(IPACmdInfo cmdInfo);
+
+    setBuffer(uint32 bufferId, uint64 bufferPtr, int32 size);
+    unsetBuffer(uint32 bufferId);
+    mapBuffers(array<libcamera.IPABuffer> buffers);
+    unmapBuffers(array<uint32> ids);
+};
+
+interface IPAIPU7EventInterface {
+    requestReady(IPACmdInfo cmdInfo, int32 ret);
+};

@@ -1,0 +1,4 @@
+We used to incorrectly assume a class in the profile would mean it
+would be in the app image.
+
+This got fixed with aosp/3064144.

@@ -1,0 +1,62 @@
+/*
+ * Copyright (C) 2015 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.android.ahat;
+
+import com.android.ahat.heapdump.AhatBitmapInstance;
+import com.android.ahat.heapdump.AhatInstance;
+import com.android.ahat.heapdump.AhatSnapshot;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
+
+class BitmapHandler implements AhatDataHandler {
+  private AhatSnapshot mSnapshot;
+
+  public BitmapHandler(AhatSnapshot snapshot) {
+    mSnapshot = snapshot;
+  }
+
+  @Override
+  public void handle(Response response, Query query) throws IOException {
+    long id = query.getLong("id", 0);
+    AhatInstance inst = mSnapshot.findInstance(id);
+    if (inst == null || !inst.isBitmapInstance()) {
+      response.error("No bitmap found for the given request.");
+      return;
+    }
+
+    AhatBitmapInstance.Bitmap bitmap = inst.asBitmapInstance().getBitmap();
+    if (bitmap == null) {
+      response.error("No bitmap found for the given request.");
+      return;
+    }
+
+    if (bitmap.image != null) {
+      OutputStream os = response.content("image/png");
+      ImageIO.write(bitmap.image, "png", os);
+      os.close();
+      return;
+    }
+
+    OutputStream os = response.content(bitmap.format);
+    os.write(bitmap.buffer);
+    os.close();
+  }
+}

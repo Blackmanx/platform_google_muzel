@@ -1,0 +1,10 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_java_net"
+    },
+    {
+      "name": "CtsLibcoreOjTestCases_java_net"
+    }
+  ]
+}

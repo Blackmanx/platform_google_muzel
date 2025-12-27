@@ -1,0 +1,10 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_content_type"
+    },
+    {
+      "name": "CtsMimeMapTestCases"
+    }
+  ]
+}

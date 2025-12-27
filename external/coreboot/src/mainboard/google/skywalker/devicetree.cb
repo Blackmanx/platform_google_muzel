@@ -1,0 +1,19 @@
+## SPDX-License-Identifier: GPL-2.0-only OR MIT
+
+chip soc/mediatek/mt8189
+	device cpu_cluster 0 on end
+end
+
+fw_config
+	field AUDIO_AMP 25 27
+		option AMP_RT9123 0
+		option AMP_RT1019 1
+		option AMP_ALC5645 3
+	end
+
+	field STORAGE 30 31
+		option STORAGE_UFS3X 0
+		option STORAGE_UFS2X 1
+		option STORAGE_EMMC 2
+	end
+end

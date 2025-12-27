@@ -1,0 +1,1 @@
+Regression test for the fast compiler which used to mishandle branches.

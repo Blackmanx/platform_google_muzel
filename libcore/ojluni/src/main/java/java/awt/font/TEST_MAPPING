@@ -1,0 +1,10 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_awt_font"
+    },
+    {
+      "name": "CtsLibcoreOjTestCases_awt_font"
+    }
+  ]
+}

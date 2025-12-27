@@ -1,0 +1,2 @@
+Ensures that MethodHandle objects correspoding to invalid const-method-type instructions are not
+created.

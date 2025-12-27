@@ -1,0 +1,19 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/kmod
+# For more info, check https://cs.android.com/android/platform/superproject/+/main:tools/external_updater/README.md
+
+name: "kmod"
+description: "Linux kernel module handling."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2024
+    month: 7
+    day: 9
+  }
+  identifier {
+    type: "Git"
+    value: "https://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git"
+    version: "v32"
+  }
+}

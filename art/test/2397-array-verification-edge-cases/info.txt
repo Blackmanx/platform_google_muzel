@@ -1,0 +1,2 @@
+Smali tests related to verification edge cases related to array access.
+1. Comparison of "null" reference to a non-zero integral type should be rejected.

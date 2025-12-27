@@ -1,0 +1,43 @@
+From e34119edf10c962902fa5a87a368c243ce1f8508 Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Mon, 7 Apr 2025 15:04:56 -0600
+Subject: [PATCH] fix tempbuffer size in halftoner
+
+The size of tempBuffer was determined by OutputWidth[K]. However, the plane K
+may be omitted and when StartPlane != K then OutputWidth[K] == 0.
+
+Corresponding change in ChromeOS: https://crrev.com/c/3681814
+
+---
+ prnt/hpcups/Halftoner.cpp | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/prnt/hpcups/Halftoner.cpp b/prnt/hpcups/Halftoner.cpp
+index 68921d4..b018920 100644
+--- a/prnt/hpcups/Halftoner.cpp
++++ b/prnt/hpcups/Halftoner.cpp
+@@ -142,14 +142,14 @@ Halftoner::Halftoner
+     }
+ 
+     // need to expand input data (easier than expanding bit-pixels after) on K row
+-    tempBuffer = (BYTE*) new BYTE[(OutputWidth[K])];
++    tempBuffer = (BYTE*) new BYTE[(OutputWidth[StartPlane])];
+     if (tempBuffer == NULL)
+     {
+         goto MemoryError;
+     }
+     if (EndPlane > Y)
+     {
+-        tempBuffer2 = (BYTE*) new BYTE[(OutputWidth[K])];
++        tempBuffer2 = (BYTE*) new BYTE[(OutputWidth[StartPlane])];
+         if (tempBuffer2 == NULL)
+         {
+             goto MemoryError;
+@@ -1023,4 +1023,3 @@ unsigned char BayerMatrix[] =
+     0x3e,   0xbe,   0x1e,   0x9e,   0x36,   0xb6,   0x16,   0x96,
+     0xfe,   0x7e,   0xde,   0x5e,   0xf6,   0x76,   0xd6,   0x56,
+ };
+-
+-- 
+2.49.0.504.g3bcea36a83-goog
+

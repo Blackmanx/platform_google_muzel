@@ -1,0 +1,195 @@
+/*
+ * Copyright (C) 2022 MediaTek Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#pragma once
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+#include "../dbg_exif_def.h"
+
+namespace dbg_cam_reserveb_param_0 {
+/******************************************************************************
+ *
+ ******************************************************************************/
+
+//ReserveB Parameter Structure
+typedef enum
+{
+    //BEGIN_OF_EXIF_TAG
+    RESERVEB_TAG_VERSION = 0,
+
+    BM_TAG_UNIQUE_ID,
+
+    BM_TAG_DENOISE_VERSION,    // 1 or 2
+    BM_TAG_DENOISE_TYPE,       // 0:none, 1:normal, 2:high-res
+    BM_TAG_DENOISE_COMPOSITION,// 0:none, 1:denoise only 2:denoise+MNR, 3:denoise+SWNR
+    BM_TAG_DENOISE_CORENUM,
+    BM_TAG_DENOISE_SPLITSIZE,
+    BM_TAG_DENOISE_B2W0,
+    BM_TAG_DENOISE_B2W1,
+    BM_TAG_DENOISE_B2W2,
+    BM_TAG_DENOISE_ISROTATE,
+    BM_TAG_DENOISE_BOBOFST,
+    BM_TAG_DENOISE_MOBOFST,
+    BM_TAG_DENOISE_BSENSORGAIN,
+    BM_TAG_DENOISE_MSENSORGAIN,
+    BM_TAG_DENOISE_BISPGAIN,
+    BM_TAG_DENOISE_MISPGAIN,
+    BM_TAG_DENOISE_PGN1,
+    BM_TAG_DENOISE_PGN2,
+    BM_TAG_DENOISE_PGN3,
+    BM_TAG_DENOISE_BORDER,
+    BM_TAG_DENOISE_RA,
+    BM_TAG_DENOISE_BMSINGLERANGE,
+    BM_TAG_DENOISE_BMOCCRANGE,
+    BM_TAG_DENOISE_BMRANGE,
+    BM_TAG_DENOISE_BMKERNEL,
+    BM_TAG_DENOISE_BRANGE,
+    BM_TAG_DENOISE_BKERNEL,
+    BM_TAG_DENOISE_WRANGE,
+    BM_TAG_DENOISE_WKERNEL,
+    BM_TAG_DENOISE_VSCALE,
+    BM_TAG_DENOISE_VOFST,
+    BM_TAG_DENOISE_VGAIN,
+    BM_TAG_DENOISE_AMATRIX1,
+    BM_TAG_DENOISE_AMATRIX2,
+    BM_TAG_DENOISE_AMATRIX3,
+    BM_TAG_DENOISE_AMATRIX4,
+    BM_TAG_DENOISE_AMATRIX5,
+    BM_TAG_DENOISE_AMATRIX6,
+    BM_TAG_DENOISE_AMATRIX7,
+    BM_TAG_DENOISE_AMATRIX8,
+    BM_TAG_DENOISE_AMATRIX9,
+    BM_TAG_DENOISE_WPADDING1,
+    BM_TAG_DENOISE_WPADDING2,
+    BM_TAG_DENOISE_OPT_FPREPROC,
+    BM_TAG_DENOISE_OPT_FSSTEP,
+
+    BM_TAG_DENOISE_OPT_DBLKRTO,
+    BM_TAG_DENOISE_OPT_DBLKTH,
+
+    BM_TAG_DENOISE_OPT_QSEARCH,
+
+    BM_TAG_SCENE_INFO1, // Preview N3D scene info
+    BM_TAG_SCENE_INFO2,
+    BM_TAG_SCENE_INFO3,
+    BM_TAG_SCENE_INFO4,
+    BM_TAG_SCENE_INFO5,
+    BM_TAG_SCENE_INFO6,
+    BM_TAG_SCENE_INFO7,
+    BM_TAG_SCENE_INFO8,
+    BM_TAG_SCENE_INFO9,
+    BM_TAG_SCENE_INFO10,
+    BM_TAG_SCENE_INFO11,
+    BM_TAG_SCENE_INFO12,
+    BM_TAG_SCENE_INFO13,
+    BM_TAG_SCENE_INFO14,
+    BM_TAG_SCENE_INFO15,
+    BM_TAG_SCENE_INFO_PRE1,
+    BM_TAG_SCENE_INFO_PRE2,
+    BM_TAG_SYSTEM_INFO1,
+    BM_TAG_SYSTEM_INFO2,
+    BM_TAG_SYSTEM_INFO3,
+    BM_TAG_SYSTEM_INFO4,
+    BM_TAG_SYSTEM_INFO5,
+    BM_TAG_SYSTEM_INFO6,
+    BM_TAG_SYSTEM_INFO7,
+    BM_TAG_RULE_INFO1,
+    BM_TAG_RULE_INFO2,
+    BM_TAG_RULE_INFO3,
+    BM_TAG_RULE_INFO4,
+    BM_TAG_RULE_INFO5,
+    BM_TAG_RULE_INFO6,
+    BM_TAG_RULE_INFO7,
+    BM_TAG_RULE_INFO8,
+    BM_TAG_RULE_INFO9,
+    BM_TAG_RULE_INFO10,
+    BM_TAG_RULE_INFO11,
+    BM_TAG_RULE_INFO12,
+    BM_TAG_RULE_INFO13,
+    BM_TAG_RULE_INFO14,
+    BM_TAG_RULE_INFO15,
+    BM_TAG_DECISION_STATE1,
+    BM_TAG_DECISION_STATE2,
+    BM_TAG_DECISION_STATE3,
+    BM_TAG_DECISION_STATE4,
+    BM_TAG_DECISION_STATE5,
+    BM_TAG_DENOISE_RATIO_CROP_X,
+    BM_TAG_DENOISE_RATIO_CROP_Y,
+    BM_TAG_DENOISE_RATIO_CROP_W,
+    BM_TAG_DENOISE_RATIO_CROP_H,
+    BM_TAG_DENOISE_FOV_CROP_X,
+    BM_TAG_DENOISE_FOV_CROP_Y,
+    BM_TAG_DENOISE_FOV_CROP_W,
+    BM_TAG_DENOISE_FOV_CROP_H,
+    BM_TAG_DENOISE_OPT_BITMODE,
+
+    BM_TAG_MFHR_VERSION,
+    BM_TAG_MFHR_EXPOSURE,
+    BM_TAG_MFHR_MFNR_ISO_TH,
+    BM_TAG_MFHR_BSS_ENABLE,
+    BM_TAG_MFHR_BSS_ROI_WIDTH,
+    BM_TAG_MFHR_BSS_ROI_HEIGHT,
+    BM_TAG_MFHR_BSS_ROI_X0,
+    BM_TAG_MFHR_BSS_ROI_Y0,
+    BM_TAG_MFHR_BSS_SCALE_FACTOR,
+    BM_TAG_MFHR_BSS_CLIP_TH0,
+    BM_TAG_MFHR_BSS_CLIP_TH1,
+    BM_TAG_MFHR_BSS_ZERO,
+    BM_TAG_MFHR_BSS_ADF_TH,
+    BM_TAG_MFHR_BSS_SDF_TH,
+    BM_TAG_MFHR_BSS_FRAME_NUM,
+    BM_TAG_MFHR_BSS_BEST_IDX,
+    BM_TAG_MFHR_BSS_IN_WIDTH,
+    BM_TAG_MFHR_BSS_IN_HEIGHT,
+    BM_TAG_MFHR_BSS_BITNUM,
+    BM_TAG_MFHR_BSS_BAYERORDER,
+    BM_TAG_MFHR_BSS_STRIDE,
+
+    BM_TAG_MFHR_GMV_00,
+    BM_TAG_MFHR_GMV_01,
+    BM_TAG_MFHR_GMV_02,
+    BM_TAG_MFHR_GMV_03,
+    BM_TAG_MFHR_GMV_04,
+    BM_TAG_MFHR_GMV_05,
+    BM_TAG_MFHR_GMV_06,
+    BM_TAG_MFHR_GMV_07,
+    BM_TAG_MFHR_GMV_08,
+    BM_TAG_MFHR_GMV_09,
+    BM_TAG_MFHR_GMV_10,
+    BM_TAG_MFHR_GMV_11,
+
+    RESERVEB_TAG_END
+    //END_OF_EXIF_TAG
+}DEBUG_RESERVEB_TAG_T;
+
+// TEST_B debug info
+enum { RESERVEB_DEBUG_TAG_VERSION = 0 };
+enum { RESERVEB_DEBUG_TAG_SUBVERSION = 0 };
+#define RESERVEB_DEBUG_TAG_VERSION_DP ((RESERVEB_DEBUG_TAG_SUBVERSION << 16) | RESERVEB_DEBUG_TAG_VERSION)
+enum { RESERVEB_DEBUG_TAG_SIZE = (RESERVEB_TAG_END+10) };
+
+struct DEBUG_RESERVEB_INFO_T {
+    debug_exif_field Tag[RESERVEB_DEBUG_TAG_SIZE];
+};
+
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+}  //namespace
+

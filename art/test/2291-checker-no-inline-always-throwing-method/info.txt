@@ -1,0 +1,1 @@
+Test that instructions that always throw are treated like throws in the inliner.

@@ -1,0 +1,60 @@
+From 367ca9c97f3af266a730834d4556ce1c66c2dd29 Mon Sep 17 00:00:00 2001
+From: Wake Liu <wakel@google.com>
+Date: Thu, 24 Jul 2025 19:59:20 +0800
+Subject: [PATCH] ANDROID: futex/functional: skip futex_waitv tests for <5.16
+
+futex_waitv is not introduced until 5.16, so skip it for backwards compatibility.
+
+Bug: 422759683
+Link: https://lore.kernel.org/all/20250807145550.1837846-1-wakel@google.com/
+Test: atest -a vts_linux_kselftest_x86_64
+Change-Id: I8a05e6bb4c4d0b1554a1d685ef00ecc09e736505
+Signed-off-by: Wake Liu <wakel@google.com>
+---
+ .../selftests/futex/functional/futex_wait_timeout.c    | 10 +++++++---
+ tools/testing/selftests/futex/functional/futex_waitv.c |  8 ++++++++
+ 2 files changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/futex/functional/futex_wait_timeout.c b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
+index d183f878360bc..8a48cf5d235f3 100644
+--- a/tools/testing/selftests/futex/functional/futex_wait_timeout.c
++++ b/tools/testing/selftests/futex/functional/futex_wait_timeout.c
+@@ -64,9 +64,13 @@ void *get_pi_lock(void *arg)
+ static void test_timeout(int res, int *ret, char *test_name, int err)
+ {
+ 	if (!res || errno != err) {
+-		ksft_test_result_fail("%s returned %d\n", test_name,
+-				      res < 0 ? errno : res);
+-		*ret = RET_FAIL;
++		if (errno == ENOSYS) {
++			ksft_test_result_skip("%s: %m\n", test_name);
++		} else {
++			ksft_test_result_fail("%s returned %d\n", test_name,
++					      res < 0 ? errno : res);
++			*ret = RET_FAIL;
++		}
+ 	} else {
+ 		ksft_test_result_pass("%s succeeds\n", test_name);
+ 	}
+diff --git a/tools/testing/selftests/futex/functional/futex_waitv.c b/tools/testing/selftests/futex/functional/futex_waitv.c
+index 034dbfef40cb2..2a86fd3ea6578 100644
+--- a/tools/testing/selftests/futex/functional/futex_waitv.c
++++ b/tools/testing/selftests/futex/functional/futex_waitv.c
+@@ -59,6 +59,14 @@ void *waiterfn(void *arg)
+ 
+ int main(int argc, char *argv[])
+ {
++	if (!ksft_min_kernel_version(5, 16)) {
++		ksft_print_header();
++		ksft_set_plan(0);
++		ksft_print_msg("%s: FUTEX_WAITV not implemented until 5.16\n",
++			       basename(argv[0]));
++		ksft_print_cnts();
++		return KSFT_SKIP;
++	}
+ 	pthread_t waiter;
+ 	int res, ret = RET_PASS;
+ 	struct timespec to;
+-- 
+2.50.1.703.g449372360f-goog
+

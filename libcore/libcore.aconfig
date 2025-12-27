@@ -1,0 +1,174 @@
+# Copyright (C) 2023 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# com.android is a reserved namespace for Android platform. See CDD 3.6.
+# com.android is chosen as the java_aconfig_library is normally exposed to the platform,
+# but not public apps.
+package: "com.android.libcore"
+container: "com.android.art"
+
+flag {
+    namespace: "core_libraries"
+    name: "v_apis"
+    is_exported: true
+    description: "This flag controls whether exposing Android V APIs"
+    bug: "306360493"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "hpke_v_apis"
+    is_exported: true
+    description: "This flag controls whether exposing HPKE APIs on Android V"
+    bug: "323357598"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "openjdk_21_v1_apis"
+    is_exported: true
+    description: "This flag includes OpenJDK 21 APIs released in 2025."
+    bug: "340486785"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "openjdk_21_v2_apis"
+    is_exported: true
+    description: "This flag includes OpenJDK APIs released after 25Q2."
+    bug: "414798911"
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "openjdk21_stringconcat"
+    is_exported: true
+    description: "This flag exposes StringConcatException"
+    bug: "285090974"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "devtools"
+    name: "appinfo"
+    is_exported: true
+    description: "This flag controls whether Frameworks sends app info to adb so debuggers can attach"
+    bug: "333161320"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "post_cleanup_apis"
+    is_exported: true
+    description: "This flag includes APIs to add/remove/call callbacks post-cleanup"
+    bug: "331243037"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "native_metrics"
+    is_exported: true
+    description: "This flag includes APIs for maintaining and exposing native allocation metrics"
+    bug: "331243037"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "read_only_dynamic_code_load"
+    is_exported: true
+    description: "This flag controls if read only is enforced when loading native code"
+    bug: "354921003"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "hpke_public_api"
+    is_exported: true
+    description: "This flag includes HPKE public APIs"
+    bug: "323357598"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "madvise_api"
+    is_exported: true
+    description: "Java APIs to access madvise()"
+    bug: "383173082"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "niceness_apis"
+    is_exported: true
+    description: "Java APIs get/set niceness"
+    bug: "417492941"
+    # APIs provided by a mainline module can only use a frozen flag.
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "core_libraries"
+    name: "openjdk_25_v1_apis"
+    is_exported: true
+    description: "This flag includes OpenJDK APIs released in 26Q2."
+    bug: "417667799"
+    is_fixed_read_only: true
+}
+
+flag {
+    name: "virtual_thread_api_v1"
+    namespace: "core_libraries"
+    description: "Flag for the version 1 of Virtual Thread API."
+    bug: "346542404"
+    is_fixed_read_only: true
+    is_exported: true
+}
+
+flag {
+    namespace: "network_security"
+    name: "network_security_policy_reason_ct_enabled_api"
+    is_exported: true
+    description: "Flag to gate the new getCertificateTransparencyVerificationReason method in NetworkSecurityPolicy"
+    bug: "425786616"
+    is_fixed_read_only: true
+}
+
+flag {
+    namespace: "network_security"
+    name: "network_security_policy_ech_api"
+    is_exported: true
+    description: "Flag to gate the new APIs in NetworkSecurityPolicy related to ECH"
+    bug: "419020719"
+    is_fixed_read_only: true
+}

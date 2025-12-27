@@ -1,0 +1,15 @@
+name: "epson-inkjet-printer-escpr"
+description:
+    "Filter used to generate print data for specific Epson printers."
+
+third_party {
+  identifier {
+    type: "Archive"
+    value: "https://download3.ebz.epson.net/dsc/f/03/00/16/21/81/74d098a47c3a616713079c9cd5904b468bb33dea/epson-inkjet-printer-escpr-1.8.6-1.tar.gz"
+    primary_source: true
+    version: "1.8.6"
+  }
+  version: "1.8.6"
+  last_upgrade_date { year: 2025 month: 3 day: 27 }
+  license_type: RESTRICTED
+}

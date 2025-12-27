@@ -1,0 +1,185 @@
+/* SPDX-License-Identifier: LGPL-2.1-or-later */
+
+/*
+ * \todo Document the interface and remove the related EXCLUDE_PATTERNS entry.
+ */
+
+module ipa.mtkisp7;
+
+import "include/libcamera/ipa/core.mojom";
+
+struct SensorSetting {
+	uint32 exposure;
+	uint32 gain;
+	uint32 vblank;
+	int32 position;
+};
+
+struct CamSysData {
+        bool has_af;
+        uint32 mbus_code;
+};
+
+struct GyroSampleData {
+	double x_value;
+	double y_value;
+	double z_value;
+	int64 timestamp;
+};
+
+struct VcmFocusInformation {
+	int32 focus_position;
+	int32 previous_focus_position;
+	int64 moving_timestamp;
+	int64 previous_moving_timestamp;
+};
+
+struct LensPositionInfo {
+	float focusDistance;
+};
+
+struct PrimaryFaceData {
+        uint32 x1;
+        uint32 y1;
+        uint32 x2;
+        uint32 y2;
+
+        uint32 padding_left;
+        uint32 padding_right;
+        uint32 padding_up;
+        uint32 padding_down;
+};
+
+struct AaaIspExchange {
+        bool highIsoMode = false;
+        bool mfnrMode;
+        libcamera.ControlList aaaMetadata;
+};
+
+struct ImgMetaRequestData {
+	bool isCapture;
+	uint32 stage;  // NSIspTuning::EStage_T
+	uint32 tuningBufferId;
+	uint32 statisticsBufferId;
+	uint32 swHistBufferId;
+	libcamera.Size inputSize;
+	libcamera.Size outputSize;
+	libcamera.Size outputSize2;
+	libcamera.Size fullDipSize;
+
+	// mtk::isphal::kISPExtBuf, InfoFrame
+	map<uint32, uint32> reserved;
+
+	bool isMfnr;
+	int32 tnr_frameIndex;
+	int32 tnr_frameTotal;
+	int32 index;
+	bool isGolden;
+
+	bool hasFrameNumber;
+	uint32 frameNumber;
+};
+
+struct BssFramesData {
+	// in
+	uint32 bssParamInfoId;
+	uint32 bssDataGInfoId;
+	uint32 bssVerInfoId;
+	uint32 bssTuningInfoId;
+
+	array<uint32> bssFdMainInfoId;
+	array<uint32> imgiId;
+	array<uint32> bssFdInfoId;
+	array<uint32> bssFaceInfoId;
+	array<uint32> bssPosInfoId;
+
+	// out
+	uint32 bssOutDataInfoId;
+
+	// debug
+	uint32 exposure;
+	uint32 iso;
+};
+
+struct SwmeFramesData {
+	// in
+	uint32 base_buf;
+	uint32 ref_buf;
+	uint32 bss_buf;
+	uint32 paramInInfo;
+	uint32 tuningInfo;
+
+	// out
+	uint32 conf_map;
+	uint32 warpping_map;
+	uint32 mcmv;
+	uint32 paramOutInfo;
+};
+
+interface IPAMtkISP7Interface {
+	init(string model, int32 sensorIdx, array<uint8> eeprom,
+             array<CamSysData> camSysDataArray) => (int32 ret);
+	start(uint32 rawMetaBufferId) => (SensorSetting sensorSetting,
+					  int32 lens_position);
+	stop();
+
+	configure(libcamera.Size camsysYuvSize, libcamera.Size maxVideoSize,
+                  libcamera.Size maxStillSize, string sensorId, uint32 camsysIndex,
+                  int32 sessionTimestamp, bool isVideo, libcamera.Size sensorFullSize,
+                  libcamera.Size swmeAlignedSize) =>
+                  (int32 ret, libcamera.Size wrappingMapSize,
+                   libcamera.Size confMapSize);
+
+	mapBuffers(array<libcamera.IPABuffer> buffers);
+	unmapBuffers(array<uint32> ids);
+
+        writeStillCaptureDebugMetadata(uint32 camSysMetaRequestId)
+                                       => (libcamera.ControlList metadata);
+
+        [async] notifyRequestBegin(uint32 baseFrame, uint32 curFrame, bool hasStillCapture);
+        [async] notifyRequestEnd(uint32 frame);
+
+        [async] notifyExportBegin(uint32 exportBegin, uint32 exportEnd);
+        [async] notifyImportBegin(uint32 importBegin, uint32 importEnd);
+
+        [async] aieParse(uint32 inputImageBufferId,
+                         uint32 faceDetectionMetadataBufferId,
+                         uint32 faceToneClassificationMetadataBufferId,
+                         libcamera.Size currentSensorSize,
+                         uint32 camSysMetaRequestId);
+
+	[async] doCalculation3A(uint32 frame,
+                                uint32 stat0BufferId, uint32 stat1BufferId,
+                                uint64 timestamp, uint32 camSysMetaRequestId,
+                                uint32 afCamSysMetaRequestId,
+                                bool isStillCapture, uint32 rawMetaBufferId,
+                                GyroSampleData gyroSample,
+                                uint32 internalRequestIdApplied,
+                                int32 featureEnum,
+                                VcmFocusInformation vcmFocusInfo,
+                                libcamera.ControlList controls);
+
+	[async] getImgSysMetaTuning(uint64 cookie,
+	                            uint32 camSysMetaRequestId, uint32 frame,
+	                            bool needCropTNC16x9, uint32 featureEnum,
+	                            array<ImgMetaRequestData> imgMetaRequests,
+                                    libcamera.ControlList controls);
+
+        [async] doBss(uint64 cookie, BssFramesData bssFramesData, uint32 internalRequestId);
+        [async] doSwme(uint64 cookie, array<SwmeFramesData> swmeFramesData);
+};
+
+interface IPAMtkISP7EventInterface {
+        AieParseResultReady(bool success,
+                            PrimaryFaceData faceToneConfig,
+                            libcamera.ControlList faceControls);
+
+        AAAResultReady(uint32 frame, SensorSetting sensorSetting,
+                      AaaIspExchange aaaIspExchange,
+                      LensPositionInfo lensPositionInfo);
+
+        ImgSysMetaTuningDone(uint64 taskCounter);
+
+        BssResultReady(uint64 cookie, array<int32> bssOrder);
+        SwmeResultReady(uint64 cookie);
+};

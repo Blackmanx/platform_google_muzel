@@ -1,0 +1,2 @@
+Regression test for the fast compiler and the handling of instructions that
+break the current flow.

@@ -1,0 +1,185 @@
+Processing 'multidex-container.dex'...
+Opened 'multidex-container.dex:classes.dex', DEX version '041'
+DEX file header:
+magic               : 'dex\n041\0'
+checksum            : c94c2100
+signature           : 4ff8...04f1
+container_size      : 1468
+file_size           : 564
+header_size         : 120
+header_off          : 0 (0x000000)
+link_size           : 0
+link_off            : 0 (0x000000)
+string_ids_size     : 21
+string_ids_off      : 684 (0x0002ac)
+type_ids_size       : 8
+type_ids_off        : 120 (0x000078)
+proto_ids_size      : 4
+proto_ids_off       : 152 (0x000098)
+field_ids_size      : 1
+field_ids_off       : 200 (0x0000c8)
+method_ids_size     : 6
+method_ids_off      : 208 (0x0000d0)
+class_defs_size     : 1
+class_defs_off      : 256 (0x000100)
+data_size           : 0
+data_off            : 0 (0x000000)
+
+Class #0 header:
+class_idx           : 0
+access_flags        : 0 (0x0000)
+superclass_idx      : 3
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 8
+annotations_off     : 0 (0x000000)
+class_data_off      : 390 (0x000186)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 2
+virtual_methods_size: 0
+
+Class #0            -
+  Class descriptor  : 'LMain;'
+  Access flags      : 0x0000 ()
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LMain;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10000 (CONSTRUCTOR)
+      method_idx    : 0
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+000120:                                        |[000120] Main.<init>:()V
+000130: 7010 0500 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@0005
+000136: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=17
+      locals        :
+        0x0000 - 0x0004 reg=0 this LMain;
+
+    #1              : (in LMain;)
+      name          : 'main'
+      type          : '([Ljava/lang/String;)V'
+      access        : 0x0009 (PUBLIC STATIC)
+      method_idx    : 1
+      code          -
+      registers     : 4
+      ins           : 1
+      outs          : 2
+      insns size    : 15 16-bit code units
+000138:                                        |[000138] Main.main:([Ljava/lang/String;)V
+000148: 2200 0100                              |0000: new-instance v0, LSecond; // type@0001
+00014c: 7010 0200 0000                         |0002: invoke-direct {v0}, LSecond;.<init>:()V // method@0002
+000152: 6201 0000                              |0005: sget-object v1, Ljava/lang/System;.out:Ljava/io/PrintStream; // field@0000
+000156: 6e10 0300 0000                         |0007: invoke-virtual {v0}, LSecond;.getSecond:()Ljava/lang/String; // method@0003
+00015c: 0c02                                   |000a: move-result-object v2
+00015e: 6e20 0400 2100                         |000b: invoke-virtual {v1, v2}, Ljava/io/PrintStream;.println:(Ljava/lang/String;)V // method@0004
+000164: 0e00                                   |000e: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=19
+        0x0005 line=20
+        0x000e line=21
+      locals        :
+        0x0005 - 0x000f reg=0 second LSecond;
+        0x0000 - 0x000f reg=3 args [Ljava/lang/String;
+
+  Virtual methods   -
+  source_file_idx   : 8 (Main.java)
+
+Opened 'multidex-container.dex:classes2.dex', DEX version '041'
+DEX file header:
+magic               : 'dex\n041\0'
+checksum            : 74a79d74
+signature           : 4eea...9a90
+container_size      : 1468
+file_size           : 904
+header_size         : 120
+header_off          : 564 (0x000234)
+link_size           : 0
+link_off            : 0 (0x000000)
+string_ids_size     : 21
+string_ids_off      : 684 (0x0002ac)
+type_ids_size       : 4
+type_ids_off        : 768 (0x000300)
+proto_ids_size      : 2
+proto_ids_off       : 784 (0x000310)
+field_ids_size      : 0
+field_ids_off       : 0 (0x000000)
+method_ids_size     : 3
+method_ids_off      : 808 (0x000328)
+class_defs_size     : 1
+class_defs_off      : 832 (0x000340)
+data_size           : 0
+data_off            : 0 (0x000000)
+
+Class #0 header:
+class_idx           : 0
+access_flags        : 0 (0x0000)
+superclass_idx      : 1
+interfaces_off      : 0 (0x000000)
+source_file_idx     : 10
+annotations_off     : 0 (0x000000)
+class_data_off      : 1315 (0x000523)
+static_fields_size  : 0
+instance_fields_size: 0
+direct_methods_size : 1
+virtual_methods_size: 1
+
+Class #0            -
+  Class descriptor  : 'LSecond;'
+  Access flags      : 0x0000 ()
+  Superclass        : 'Ljava/lang/Object;'
+  Interfaces        -
+  Static fields     -
+  Instance fields   -
+  Direct methods    -
+    #0              : (in LSecond;)
+      name          : '<init>'
+      type          : '()V'
+      access        : 0x10000 (CONSTRUCTOR)
+      method_idx    : 0
+      code          -
+      registers     : 1
+      ins           : 1
+      outs          : 1
+      insns size    : 4 16-bit code units
+000378:                                        |[000378] Second.<init>:()V
+000388: 7010 0200 0000                         |0000: invoke-direct {v0}, Ljava/lang/Object;.<init>:()V // method@0002
+00038e: 0e00                                   |0003: return-void
+      catches       : (none)
+      positions     :
+        0x0000 line=17
+      locals        :
+        0x0000 - 0x0004 reg=0 this LSecond;
+
+  Virtual methods   -
+    #0              : (in LSecond;)
+      name          : 'getSecond'
+      type          : '()Ljava/lang/String;'
+      access        : 0x0001 (PUBLIC)
+      method_idx    : 1
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 0
+      insns size    : 3 16-bit code units
+000360:                                        |[000360] Second.getSecond:()Ljava/lang/String;
+000370: 1a00 0900                              |0000: const-string v0, "Original" // string@0009
+000374: 1100                                   |0002: return-object v0
+      catches       : (none)
+      positions     :
+        0x0000 line=19
+      locals        :
+        0x0000 - 0x0003 reg=1 this LSecond;
+
+  source_file_idx   : 10 (Second.java)
+

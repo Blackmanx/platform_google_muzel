@@ -1,0 +1,242 @@
+package {
+    default_applicable_licenses: ["external_v4l-utils_license"],
+}
+
+// See: http://go/android-license-faq
+license {
+    name: "external_v4l-utils_license",
+    visibility: [":__subpackages__"],
+
+    license_kinds: [
+        "SPDX-license-identifier-GPL-2.0-only",
+        "SPDX-license-identifier-GPL-2.0-or-later",
+        "SPDX-license-identifier-LGPL-2.1",
+        "SPDX-license-identifier-LGPL-2.1+",
+        "SPDX-license-identifier-LGPL-2.1-only",
+    ],
+
+    license_text: [
+        "LICENSE",
+    ],
+}
+
+v4l_utils_version = "1.28.1"
+
+cc_defaults {
+    name: "v4l-utils.cc_defaults",
+    local_include_dirs: [
+        "include",
+        "utils/common",
+    ],
+
+    cflags: [
+        "-DPACKAGE_VERSION=\"" + v4l_utils_version + "\"",
+        "-DNO_LIBV4L2",
+        // _LIBCPP_FALLTHROUGH() is not available in Clang
+        // anymore so this is a temporary fix for it.
+        // Issue raised to Linux Media mailing list for a fix:
+        // https://lore.kernel.org/linux-media/CALPBKXJXg4R4jm_RZ2QDnQuOf_hGwJRQ8L=1H-nthuDHaJMq+Q@mail.gmail.com
+        "-D_LIBCPP_FALLTHROUGH()=[[fallthrough]]",
+
+        "-Wno-shift-overflow",
+    ],
+
+    visibility: [
+        // Only add dependencies that run in test images
+        "//visibility:private",
+    ],
+    c_std: "gnu99",
+    cpp_std: "gnu++11",
+}
+
+cc_binary {
+    name: "v4l2-compliance",
+    defaults: ["v4l-utils.cc_defaults"],
+    srcs: ["utils/v4l2-compliance/*.cpp"],
+    vendor: true,
+}
+
+cc_binary {
+    name: "v4l2-compliance_static",
+    defaults: ["v4l-utils.cc_defaults"],
+    srcs: ["utils/v4l2-compliance/*.cpp"],
+    static_executable: true,
+}
+
+genrule {
+    name: "media_bus_format_names_header",
+    srcs: ["include/linux/media-bus-format.h"],
+    tool_files: ["utils/gen_media_bus_format_names.sh"],
+    out: ["media-bus-format-names.h"],
+    cmd: "$(location) $(in) > $(out)",
+}
+
+cc_binary {
+    name: "v4l2-ctl",
+    defaults: ["v4l-utils.cc_defaults"],
+    generated_headers: ["media_bus_format_names_header"],
+    srcs: [
+        "utils/v4l2-ctl/*.cpp",
+        "utils/v4l2-ctl/*.c",
+    ],
+    vendor: true,
+}
+
+cc_binary {
+    name: "v4l2-ctl_static",
+    defaults: ["v4l-utils.cc_defaults"],
+    generated_headers: ["media_bus_format_names_header"],
+    srcs: [
+        "utils/v4l2-ctl/*.cpp",
+        "utils/v4l2-ctl/*.c",
+    ],
+    static_executable: true,
+}
+
+genrule {
+    name: "media_bus_format_codes_header",
+    srcs: ["include/linux/media-bus-format.h"],
+    tool_files: ["utils/gen_media_bus_format_codes.sh"],
+    out: ["media-bus-format-codes.h"],
+    cmd: "$(location) $(in) > $(out)",
+}
+
+cc_binary {
+    name: "media-ctl",
+    defaults: ["v4l-utils.cc_defaults"],
+    generated_headers: [
+        "media_bus_format_codes_header",
+        "media_bus_format_names_header",
+    ],
+    srcs: ["utils/media-ctl/*.c"],
+    vendor: true,
+}
+
+cc_binary {
+    name: "media-ctl_static",
+    defaults: ["v4l-utils.cc_defaults"],
+    generated_headers: [
+        "media_bus_format_codes_header",
+        "media_bus_format_names_header",
+    ],
+    srcs: ["utils/media-ctl/*.c"],
+    static_executable: true,
+}
+
+// Following defines unused files that is under licenses that are different
+// from default licenses.
+
+license {
+    name: "external_v4l-utils_license.unused",
+    visibility: ["//visibility:private"],
+    license_kinds: [
+        "SPDX-license-identifier-Artistic-1.0-Perl",
+        "SPDX-license-identifier-BSD-2-Clause",
+        "SPDX-license-identifier-BSD-3-Clause",
+        "SPDX-license-identifier-GPL-2.0",
+        "SPDX-license-identifier-GPL-2.0+",
+        "SPDX-license-identifier-GPL-2.0-only",
+        "SPDX-license-identifier-GPL-2.0-with-autoconf-exception",
+        "SPDX-license-identifier-GPL-3.0-or-later",
+        "SPDX-license-identifier-HPND",
+        "SPDX-license-identifier-LGPL-2.1-or-later",
+        "SPDX-license-identifier-MIT",
+    ],
+    license_text: [
+        "COPYING.libv4l",
+        "COPYING.libdvbv5",
+    ],
+}
+
+filegroup {
+    name: "v4l-utils.unused",
+    visibility: ["//visibility:private"],
+    licenses: ["external_v4l-utils_license.unused"],
+    srcs: [
+        "COPYING.libdvbv5",
+        "COPYING.libv4l",
+        "ChangeLog",
+        "INSTALL.md",
+        "README.lib-multi-threading",
+        "README.libv4l",
+        "README.md",
+        "TODO",
+        "TODO.libdvbv5",
+        "contrib/**/*",
+        "doc/Doxyfile.in",
+        "doc/libdvbv5-index.doc",
+        "doc/meson.build",
+        "include/gettext.h",
+        "include/linux/bpf.h",
+        "include/linux/bpf_common.h",
+        "include/linux/cec-funcs.h",
+        "include/linux/cec.h",
+        "include/linux/dvb/dmx.h",
+        "include/linux/dvb/frontend.h",
+        "include/linux/fb.h",
+        "include/linux/ivtv.h",
+        "include/linux/lirc.h",
+        "include/linux/v4l2-dv-timings.h",
+        "include/linux/vesa.h",
+        "lib/include/libdvbv5/*",
+        "lib/include/libv4l-plugin.h",
+        "lib/include/libv4l1-videodev.h",
+        "lib/include/libv4l1.h",
+        "lib/include/libv4l2.h",
+        "lib/include/libv4l2rds.h",
+        "lib/include/libv4lconvert.h",
+        "lib/libdvbv5/**/*",
+        "lib/libv4l-mplane/libv4l-mplane.c",
+        "lib/libv4l-mplane/meson.build",
+        "lib/libv4l1/libv4l1-kernelcode-license.txt",
+        "lib/libv4l1/libv4l1-priv.h",
+        "lib/libv4l1/libv4l1.c",
+        "lib/libv4l1/log.c",
+        "lib/libv4l1/meson.build",
+        "lib/libv4l1/v4l1compat.c",
+        "lib/libv4l2/libv4l2-priv.h",
+        "lib/libv4l2/libv4l2.c",
+        "lib/libv4l2/log.c",
+        "lib/libv4l2/meson.build",
+        "lib/libv4l2/v4l2-plugin-android.c",
+        "lib/libv4l2/v4l2-plugin.c",
+        "lib/libv4l2/v4l2convert.c",
+        "lib/libv4l2rds/libv4l2rds.c",
+        "lib/libv4l2rds/meson.build",
+        "lib/libv4lconvert/*",
+        "lib/meson.build",
+        "libdvbv5-po/*",
+        "meson.build",
+        "meson_options.txt",
+        "sync-with-kernel.sh",
+        "utils/cec-compliance/*",
+        "utils/cec-ctl/*",
+        "utils/cec-follower/*",
+        "utils/common/codec-fwht.patch",
+        "utils/common/ir-encode.c",
+        "utils/common/ir-encode.h",
+        "utils/common/keymap.c",
+        "utils/common/keymap.h",
+        "utils/common/toml.c",
+        "utils/common/toml.h",
+        "utils/common/v4l2-controls.patch",
+        "utils/common/v4l2-tpg.patch",
+        "utils/cx18-ctl/*",
+        "utils/dvb/*",
+        "utils/ir-ctl/*",
+        "utils/ivtv-ctl/*",
+        "utils/keytable/**/*",
+        "utils/libcecutil/*",
+        "utils/libmedia_dev/*",
+        "utils/libv4l2util/*",
+        "utils/meson.build",
+        "utils/qv4l2/*",
+        "utils/qvidcap/*",
+        "utils/rds-ctl/*",
+        "utils/v4l2-dbg/*",
+        "utils/v4l2-sysfs-path/*",
+        "utils/v4l2-tracer/*",
+        "v4l-utils-po/*",
+        "v4l-utils.spec.in",
+    ],
+}

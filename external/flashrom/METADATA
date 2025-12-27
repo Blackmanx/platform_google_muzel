@@ -1,0 +1,21 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/flashrom
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "flashrom"
+description: "flashrom is a utility for detecting, reading, writing, verifying and erasing flash chips. It is often used to flash BIOS/EFI/coreboot/firmware images in-system using a supported mainboard, but it also supports flashing of network cards (NICs), SATA controller cards, and other external devices which can program flash chips.  It supports a wide range of flash chips (most commonly found in SOIC8, DIP8, SOIC16, WSON8, PLCC32,  IP32, TSOP32, and TSOP40 packages), which use various protocols such as LPC, FWH, parallel flash, or SPI."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2025
+    month: 8
+    day: 15
+  }
+  homepage: "https://flashrom.org/"
+  identifier {
+    type: "Git"
+    value: "https://chromium.googlesource.com/chromiumos/third_party/flashrom/"
+    version: "50ec131cad0e57078245f464d13bb24046052718"
+    primary_source: true
+  }
+}

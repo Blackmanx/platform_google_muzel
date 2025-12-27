@@ -1,0 +1,92 @@
+//
+// Copyright (C) 2018 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package {
+    default_team: "trendy_team_fwk_core_networking",
+    default_applicable_licenses: ["system_bpfprogs_license"],
+}
+
+license {
+    name: "system_bpfprogs_license",
+    license_kinds: [
+        "SPDX-license-identifier-GPL-2.0",
+    ],
+    license_text: ["LICENSE"],
+}
+
+libbpf_prog {
+    name: "timeInState.bpf",
+    srcs: ["timeInState.c"],
+    header_libs: [
+        "bpf_prog_headers",
+        "libcutils_headers",
+        "android_bpf_defs",
+    ],
+    relative_install_path: "cputimeinstate",
+}
+
+libbpf_prog {
+    name: "fuseMedia.bpf",
+    srcs: ["fuseMedia.c"],
+    header_libs: [
+        "android_bpf_defs",
+        "libfuse_headers",
+    ],
+}
+
+aconfig_declarations {
+    name: "android_bpfprogs_flags",
+    package: "android.bpfprogs.flags",
+    container: "system",
+    srcs: [
+        "progs.aconfig",
+    ],
+}
+
+rust_aconfig_library {
+    name: "libandroid_bpfprogs_flags",
+    crate_name: "android_bpfprogs_flags",
+    aconfig_declarations: "android_bpfprogs_flags",
+}
+
+java_aconfig_library {
+    name: "android.bpfprogs.flags-aconfig-java",
+    aconfig_declarations: "android_bpfprogs_flags",
+}
+
+cc_aconfig_library {
+    name: "android.bpfprogs.flags-aconfig-cpp",
+    aconfig_declarations: "android_bpfprogs_flags",
+}
+
+libbpf_prog {
+    name: "dmabufIter.bpf",
+    srcs: ["dmabufIter.c"],
+    header_libs: [
+        "android_bpf_defs",
+        "vmlinux_h_5_10",
+    ],
+    cflags: [
+        "-DUSE_VMLINUX",
+    ],
+    relative_install_path: "dmabuf",
+    arch: {
+        // RISC-V is not a supported architecture, so we don't have a vmlinux.
+        riscv64: {
+            enabled: false,
+        },
+    },
+}

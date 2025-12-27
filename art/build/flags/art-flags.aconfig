@@ -1,0 +1,217 @@
+# Copyright (C) 2024 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+package: "com.android.art.flags"
+container: "com.android.art"
+
+# Flag for generational CMC feature
+flag {
+  name: "use_generational_cmc"
+  namespace: "art_performance"
+  description: "Use CMC's generational logic"
+  bug: "343220989"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+# Flag for the experimental feature of on-demand method tracing
+flag {
+  name: "always_enable_profile_code"
+  namespace: "art_performance"
+  description: "Flag to control on-demand method tracing feature"
+  bug: "352518093"
+  is_fixed_read_only: true
+  is_exported: true
+}
+
+# Flag for better spill slot reuse in the register allocator.
+flag {
+  name: "reg_alloc_spill_slot_reuse"
+  namespace: "art_performance"
+  description: "Flag to control spill slot reuse in register allocator"
+  bug: "264678256"
+  is_fixed_read_only: true
+  is_exported: false
+  metadata {
+      purpose: PURPOSE_BUGFIX
+  }
+}
+
+# Flag for better handling of `Location::kNoOutputOverlap` in the register allocator.
+flag {
+  name: "reg_alloc_no_output_overlap"
+  namespace: "art_performance"
+  description: "Flag to control `Location::kNoOutputOverlap` handling in register allocator"
+  bug: "438388740"
+  is_fixed_read_only: true
+  is_exported: false
+  metadata {
+      purpose: PURPOSE_BUGFIX
+  }
+}
+
+# Flag for making `const-string` interns weak.
+flag {
+  name: "weak_const_string"
+  namespace: "art_performance"
+  description: "Flag to control whether `const-string` interns are strong or weak"
+  bug: "117621117"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+# Flag for register allocation improvements in loops.
+flag {
+  name: "reg_alloc_loops"
+  namespace: "art_performance"
+  description: "Flag to control whether register allocation improvements for loops are enabled"
+  bug: "449684446"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "test"
+  namespace: "art_mainline"
+  description: "Permanent test flag."
+  bug: "352723620"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  namespace: "system_performance"
+  name: "executable_method_file_offsets"
+  is_exported: true
+  description: "This flag includes the API for getting the compiled native executable offset info for a java method"
+  bug: "296108553"
+  is_fixed_read_only: true
+}
+
+flag {
+  namespace: "system_performance"
+  name: "executable_method_file_offsets_deprecation"
+  is_exported: true
+  description: "Deprecate the original getExecutableMethodFileOffsets API which takes a Method"
+  bug: "400457896"
+  is_fixed_read_only: true
+}
+
+flag {
+  namespace: "system_performance"
+  name: "executable_method_file_offsets_v2"
+  is_exported: true
+  description: "This flag includes the API for getting the compiled native executable offset info for a java executable"
+  bug: "400457896"
+  is_fixed_read_only: true
+}
+
+flag {
+  name: "art_service_v3"
+  namespace: "art_mainline"
+  description: "Flag for all new ART Service APIs added in the 25Q2 version of the ART module."
+  bug: "373820009"
+  is_fixed_read_only: true
+  is_exported: true
+}
+
+flag {
+  name: "virtual_thread_impl_v1"
+  namespace: "core_libraries"
+  description: "Flag for version 1 of Virtual Thread implementation."
+  bug: "346542404"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "fast_baseline_compiler"
+  namespace: "art_performance"
+  description: "Flag to enable the fast ARM64 baseline compiler"
+  bug: "384433113"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "enforce_permitted_subclasses_checks"
+  namespace: "core_libraries"
+  description: "Flag to enable enforcement of the sealed classes annotations"
+  bug: "416480439"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "updatable_filter_and_reason"
+  namespace: "art_mainline"
+  description: "Flag to enable ART Service APIs to map compiler filters and compilation reasons for metrics reporting"
+  bug: "422943028"
+  is_fixed_read_only: true
+  is_exported: true
+}
+
+flag {
+  name: "ignore_boot_image_extension_class_resolution"
+  namespace: "art_cloud"
+  description: "Flag to ignore boot image extension class resolution"
+  bug: "274077782"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "dexopt_secondary_isa_only_when_needed"
+  namespace: "art_cloud"
+  description: "Flag to enable secondary ISA dexopt only when needed"
+  bug: "306362133"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "art_managed_install_files_validation_api"
+  namespace: "art_cloud"
+  description: "Flag for the validation API for ART-managed install files (.sdm, .dm, etc.)"
+  bug: "434137291"
+  is_fixed_read_only: true
+  is_exported: true
+}
+
+flag {
+  name: "hiddenapi_jni_api_callers"
+  namespace: "art_mainline"
+  description: "Make hiddenapi accurately identify native JNI API callers"
+  bug: "403305904"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "hiddenapi_platform_enforcement"
+  namespace: "art_mainline"
+  description: "Enforce core platform (ART+Conscrypt) APIs from platform callers"
+  bug: "377676642"
+  is_fixed_read_only: true
+  is_exported: false
+}
+
+flag {
+  name: "package_last_used_api"
+  namespace: "art_cloud"
+  description: "Flag for the API that returns the last time the package was used"
+  bug: "437843184"
+  is_fixed_read_only: true
+  is_exported: true
+}

@@ -1,0 +1,7 @@
+# Repackages ART flag classes to be accessible in ART Service tests. Otherwise, the
+# classes are on bootclasspath as hidden APIs, which are inaccessible by tests.
+rule com.android.art.flags.CustomFeatureFlags com.android.server.art.jarjar.@0
+rule com.android.art.flags.FakeFeatureFlagsImpl com.android.server.art.jarjar.@0
+rule com.android.art.flags.FeatureFlags com.android.server.art.jarjar.@0
+rule com.android.art.flags.FeatureFlagsImpl com.android.server.art.jarjar.@0
+rule com.android.art.flags.Flags com.android.server.art.jarjar.@0

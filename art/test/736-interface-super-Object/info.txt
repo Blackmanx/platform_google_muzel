@@ -1,0 +1,1 @@
+Regression test calling super.toString from an interface method.

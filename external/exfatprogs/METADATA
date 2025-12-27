@@ -1,0 +1,22 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/exfatprogs
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "exfatprogs"
+description: "As new exfat filesystem is merged into linux-5.7 kernel, exfatprogs is created as an official userspace utilities that contain all of the standard utilities for creating and fixing and debugging exfat filesystem in linux system. The goal of exfatprogs is to provide high performance and quality at the level of exfat utilities in windows. And this software is licensed under the GNU General Public License Version 2."
+third_party {
+  license_type: RESTRICTED
+  security {
+    tag: "NVD-CPE2.3:cpe:/a:namjaejeon:exfatprogs:1.2.8"
+  }
+  last_upgrade_date {
+    year: 2025
+    month: 4
+    day: 28
+  }
+  identifier {
+    type: "Git"
+    value: "https://github.com/exfatprogs/exfatprogs/"
+    version: "1.2.8"
+  }
+}

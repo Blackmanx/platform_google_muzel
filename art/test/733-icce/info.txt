@@ -1,0 +1,1 @@
+Regression test for a missing incompatible class change check in the compiler.

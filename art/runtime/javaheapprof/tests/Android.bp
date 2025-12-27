@@ -1,0 +1,20 @@
+android_test {
+    name: "JavaHeapProfTest",
+
+    srcs: ["src/**/*.java"],
+    data: [
+        "javaheapprof.pbtxt",
+        "query.sql",
+    ],
+    device_first_data: [":trace_processor_shell"],
+
+    static_libs: [
+        "androidx.test.runner",
+        "collector-device-lib",
+        "perfetto-helper",
+    ],
+    certificate: "platform",
+
+    test_config: "AndroidTest.xml",
+    test_suites: ["device-tests"],
+}

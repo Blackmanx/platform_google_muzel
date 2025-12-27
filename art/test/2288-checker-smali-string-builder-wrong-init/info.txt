@@ -1,0 +1,2 @@
+Smali test that makes sure the StringBuilderAppend optimization doesn't
+crash when the instance is initialized with Object<init>.

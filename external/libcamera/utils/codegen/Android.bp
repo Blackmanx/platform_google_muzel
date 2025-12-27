@@ -1,0 +1,41 @@
+python_library_host {
+    name: "libcamera_controls_lib",
+    srcs: [
+        "controls.py",
+    ],
+}
+
+python_binary_host {
+    name: "libcamera_controls_script_host",
+    srcs: [
+        "gen-controls.py",
+    ],
+    main: "gen-controls.py",
+    libs: [
+        "libcamera_controls_lib",
+        "pyyaml",
+        "py-jinja",
+    ],
+}
+
+python_binary_host {
+    name: "libcamera_format_gen_host",
+    srcs: [
+        "gen-formats.py",
+    ],
+    main: "gen-formats.py",
+    libs: [
+        "pyyaml",
+    ],
+}
+
+python_binary_host {
+    name: "libcamera_tracepoint_gen_host",
+    srcs: [
+        "gen-tp-header.py",
+    ],
+    main: "gen-tp-header.py",
+    libs: [
+        "py-jinja",
+    ],
+}

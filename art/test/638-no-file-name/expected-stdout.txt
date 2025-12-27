@@ -1,0 +1,5 @@
+java.lang.Error
+	at Main.main(dex-id-<hash>:2)
+java.lang.NullPointerException
+	at Main.doThrow(dex-id-<hash>:0)
+	at Main.main(dex-id-<hash>:16)

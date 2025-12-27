@@ -1,0 +1,420 @@
+/*
+ * Copyright 2018 The Error Prone Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.errorprone.bugpatterns;
+
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+/**
+ * Tests for {@link LockNotBeforeTry} bugpattern.
+ *
+ * @author ghm@google.com (Graeme Morgan)
+ */
+@RunWith(JUnit4.class)
+public final class LockNotBeforeTryTest {
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(LockNotBeforeTry.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(LockNotBeforeTry.class, getClass());
+
+  @Test
+  public void positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                try {
+                  // BUG: Diagnostic contains:
+                  lock.lock();
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ignoresMultipleLocks() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lockA, ReentrantLock lockB) {
+                try {
+                  lockA.lock();
+                  lockB.lock();
+                  System.out.println("hi");
+                } finally {
+                  lockA.unlock();
+                  lockB.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refactorToBefore() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                try {
+                  lock.lock();
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void interspersed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                try {
+                  System.out.println("hi");
+                  // BUG: Diagnostic contains:
+                  lock.lock();
+                  System.out.println("bye");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void refactorIntermediate() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                System.out.println("hi");
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refactorUnlockOutsideTry() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                System.out.println("hi");
+                lock.unlock();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void twoRegions() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                System.out.println("hi");
+                lock.unlock();
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unclosed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock) {
+                // BUG: Diagnostic contains:
+                lock.lock();
+                System.out.println("hi");
+                lock.lock();
+                try {
+                  System.out.println("hi");
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void receiverless() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test implements java.util.concurrent.locks.Lock {
+              private void test() {
+                lock();
+                try {
+                } finally {
+                  unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void receiverless2() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.Lock;
+
+            abstract class Test implements Lock {
+              private void test(Lock l) {
+                lock();
+                l.lock();
+                try {
+                } finally {
+                  unlock();
+                  l.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonInvocationExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.locks.ReentrantLock;
+
+            abstract class Test {
+              private void test(ReentrantLock lock) {
+                String s;
+                // BUG: Diagnostic contains:
+                lock.lock();
+                s = lock.toString();
+                lock.unlock();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nullCheck() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static java.util.Objects.requireNonNull;
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock, Runnable r) {
+                lock.lock();
+                requireNonNull(r);
+                try {
+                  r.run();
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.util.Objects.requireNonNull;
+            import java.util.concurrent.locks.ReentrantLock;
+
+            class Test {
+              private void test(ReentrantLock lock, Runnable r) {
+                lock.lock();
+                try {
+                  requireNonNull(r);
+                  r.run();
+                } finally {
+                  lock.unlock();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+}

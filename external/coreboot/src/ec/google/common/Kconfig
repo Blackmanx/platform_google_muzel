@@ -1,0 +1,11 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+config EC_GOOGLE_COMMON_MEC
+	bool
+	help
+	  Google common EC functions for Microchip EMI region.
+
+config EC_GOOGLE_COMMON_RTK
+	bool
+	help
+	  Google common EC functions for Realtek EMI region.

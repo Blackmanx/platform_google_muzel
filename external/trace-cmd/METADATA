@@ -1,0 +1,19 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/trace-cmd
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "trace-cmd"
+description: "trace-cmd is a front-end to the ftrace Linux kernel tracer."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2025
+    month: 1
+    day: 30
+  }
+  identifier {
+    type: "Git"
+    value: "https://git.kernel.org/pub/scm/utils/trace-cmd/trace-cmd.git"
+    version: "trace-cmd-v3.3.1"
+  }
+}

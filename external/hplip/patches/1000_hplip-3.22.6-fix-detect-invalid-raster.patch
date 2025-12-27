@@ -1,0 +1,31 @@
+From fd430741e9e7b7d62848db54bbeaccb83628b1c4 Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Mon, 7 Apr 2025 11:17:27 -0600
+Subject: [PATCH] Verify cupsRasterReadPixels return value
+
+Corresponding change in ChromeOS: https://crrev.com/c/5769848
+
+---
+ prnt/hpcups/HPCupsFilter.cpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/prnt/hpcups/HPCupsFilter.cpp b/prnt/hpcups/HPCupsFilter.cpp
+index 6750684..2cd0b60 100644
+--- a/prnt/hpcups/HPCupsFilter.cpp
++++ b/prnt/hpcups/HPCupsFilter.cpp
+@@ -787,7 +787,11 @@ int HPCupsFilter::processRasterData(cups_raster_t *cups_raster)
+         // Iterating through the raster per page
+         bool is_ljmono = strcmp(m_JA.printer_language, "ljmono");
+         for (int y = 0; y < (int) cups_header.cupsHeight; y++) {
+-            cupsRasterReadPixels (cups_raster, m_pPrinterBuffer, cups_header.cupsBytesPerLine);
++            if (cupsRasterReadPixels (cups_raster, m_pPrinterBuffer, cups_header.cupsBytesPerLine) != cups_header.cupsBytesPerLine) {
++                dbglog("DEBUG: cupsRasterReadPixels failed; incorrect input file ?\n");
++                ret_status = err = SYSTEM_ERROR;
++                break;
++            }
+             color_raster = rgbRaster;
+             black_raster = kRaster;
+             #ifndef DISABLE_IMAGEPROCESSOR 
+-- 
+2.49.0.504.g3bcea36a83-goog
+

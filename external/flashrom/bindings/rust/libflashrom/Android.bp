@@ -1,0 +1,60 @@
+package {
+    default_applicable_licenses: ["external_flashrom_license"],
+    default_team: "trendy_team_desktop_manufacturing_and_serviceability",
+}
+
+cc_library_static {
+    name: "libflashrom_log_c",
+    defaults: ["flashrom_defaults"],
+    srcs: ["src/log.c"],
+    cflags: ["-Wno-missing-prototypes"],
+    vendor_available: true,
+    visibility: ["//visibility:private"],
+    include_dirs: ["external/flashrom/include"],
+}
+
+rust_defaults {
+    name: "libflashrom_defaults",
+    edition: "2021",
+    static_libs: [
+        "libflashrom_log_c",
+        "libpci",
+    ],
+    shared_libs: [
+        "libflashrom",
+        "libusb",
+    ],
+    rustlibs: [
+        "liblibc",
+        "liblibflashrom_sys",
+        "libonce_cell",
+        "libregex",
+        "libnix",
+    ],
+}
+
+rust_test {
+    name: "libflashrom_test_src_lib",
+    host_supported: true,
+    crate_name: "libflashrom",
+    cargo_env_compat: true,
+    cargo_pkg_version: "0.1.0",
+    crate_root: "src/lib.rs",
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    test_options: {
+        unit_test: true,
+    },
+    defaults: ["libflashrom_defaults"],
+}
+
+rust_library {
+    name: "liblibflashrom",
+    host_supported: true,
+    crate_name: "libflashrom",
+    cargo_env_compat: true,
+    cargo_pkg_version: "0.1.0",
+    crate_root: "src/lib.rs",
+    defaults: ["libflashrom_defaults"],
+    vendor_available: true,
+}

@@ -1,0 +1,29 @@
+cc_library_static {
+    name: "libap_wpsr",
+    visibility: ["//visibility:private"],
+    vendor_available: true,
+
+    srcs: [
+        ":libap_wpsr_srcs",
+        "shim/flashrom_shim.c",
+    ],
+    include_dirs: [
+        "external/flashrom",
+        "external/flashrom/include",
+        "external/flashrom/util/ap_wpsr/shim",
+    ],
+}
+
+cc_binary {
+    name: "ap_wpsr",
+    visibility: ["//visibility:private"],
+    vendor: true,
+
+    srcs: ["main.c"],
+    static_libs: ["libap_wpsr"],
+    include_dirs: [
+        "external/flashrom",
+        "external/flashrom/include",
+        "external/flashrom/util/ap_wpsr/shim",
+    ],
+}

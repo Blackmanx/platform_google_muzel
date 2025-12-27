@@ -1,0 +1,18 @@
+## SPDX-License-Identifier: GPL-2.0-only OR MIT
+
+comment "Skywalker"
+
+config BOARD_GOOGLE_ANAKIN
+	bool "->  Anakin"
+
+config BOARD_GOOGLE_BAZE
+	bool "->  Baze"
+
+config BOARD_GOOGLE_OBIWAN
+	bool "->  Obiwan"
+
+config BOARD_GOOGLE_SKYWALKER
+	bool "->  Skywalker"
+
+config BOARD_GOOGLE_YODA
+	bool "-> Yoda"

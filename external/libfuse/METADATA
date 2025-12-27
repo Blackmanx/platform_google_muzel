@@ -1,0 +1,21 @@
+name: "libfuse"
+description:
+    "The reference implementation of the Linux FUSE (Filesystem in Userspace) interface"
+
+third_party {
+  license_type: RESTRICTED_IF_STATICALLY_LINKED
+  last_upgrade_date {
+    year: 2024
+    month: 7
+    day: 17
+  }
+  homepage: "https://github.com/libfuse"
+  identifier {
+    type: "Git"
+    value: "https://github.com/libfuse/libfuse.git"
+    version: "eca63dab456a10c3491c367711ab18cbcb34816e"
+  }
+  security: {
+    tag: "NVD-CPE2.3:cpe:/a:redhat:fuse:3.17.0"
+  }
+}

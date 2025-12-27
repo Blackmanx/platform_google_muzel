@@ -1,0 +1,5 @@
+java.lang.Error
+	at Main.main(Unknown Source)
+java.lang.NullPointerException: Cannot throw exception because "<parameter1>" is null
+	at Main.doThrow(Unknown Source)
+	at Main.main(Unknown Source)

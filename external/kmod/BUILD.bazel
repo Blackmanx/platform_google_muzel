@@ -1,0 +1,95 @@
+# Copyright (C) 2025 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+_LIBKMOD_CFLAGS = select({
+    "@kleaf//build/kernel/kleaf/platforms/libc:musl": ["-DANDROID_HOST_MUSL"],
+    "@kleaf//build/kernel/kleaf/platforms/libc:glibc": ["-DHAVE_DECL_STRNDUPA"],
+}) + [
+    "-include android/port.h",
+    "-Wall",
+    "-Werror",
+    "-Wno-format",
+    "-Wno-unused-parameter",
+    "-Wno-unused-variable",
+    "-Dsecure_getenv=getenv",
+    "-DHAVE_CONFIG_H",
+    "-include config.h",
+    # See below issues around quote escaping
+    #   https://github.com/bazelbuild/bazel/issues/10859
+    #   https://github.com/bazelbuild/bazel/issues/21500
+    '-DDISTCONFDIR=\\"/lib\\"',
+    '-DMODULE_DIRECTORY=\\"/lib/modules\\"',
+    '-DSYSCONFDIR=\\"/tmp\\"',
+    "-UNDEBUG",
+]
+
+cc_library(
+    name = "headers",
+    srcs = glob(["**/*.h"]),
+    includes = [
+        ".",
+        "libkmod",
+    ],
+)
+
+cc_library(
+    name = "libkmod",
+    srcs = [
+        "libkmod/libkmod.c",
+        "libkmod/libkmod-builtin.c",
+        "libkmod/libkmod-config.c",
+        "libkmod/libkmod-elf.c",
+        "libkmod/libkmod-file.c",
+        "libkmod/libkmod-index.c",
+        "libkmod/libkmod-list.c",
+        "libkmod/libkmod-module.c",
+        "libkmod/libkmod-signature.c",
+        "shared/array.c",
+        "shared/hash.c",
+        "shared/scratchbuf.c",
+        "shared/strbuf.c",
+        "shared/util.c",
+    ],
+    copts = _LIBKMOD_CFLAGS,
+    target_compatible_with = [
+        "@platforms//os:linux",
+    ],
+    deps = [
+        ":headers",
+    ],
+)
+
+cc_binary(
+    name = "depmod",
+    srcs = [
+        "tools/depmod.c",
+        "tools/insmod.c",
+        "tools/kmod.c",
+        "tools/log.c",
+        "tools/lsmod.c",
+        "tools/modinfo.c",
+        "tools/modprobe.c",
+        "tools/port.c",
+        "tools/rmmod.c",
+        "tools/static-nodes.c",
+    ],
+    copts = _LIBKMOD_CFLAGS,
+    target_compatible_with = [
+        "@platforms//os:linux",
+    ],
+    visibility = [
+        "@kleaf//build/kernel:__subpackages__",
+    ],
+    deps = ["libkmod"],
+)

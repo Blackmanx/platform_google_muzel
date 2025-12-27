@@ -1,0 +1,156 @@
+// Copyright 2025 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+cc_defaults {
+    name: "hplip-defaults",
+    relative_install_path: "cups/filter",
+    cflags: [
+        "-DPACKAGE_NAME=\"HP Linux Imaging and Printing\"",
+        "-DPACKAGE_TARNAME=\"hplip\"",
+        "-DPACKAGE_VERSION=\"3.25.2\"",
+        "-DPACKAGE_STRING=\"HP Linux Imaging and Printing 3.25.2\"",
+        "-DPACKAGE_BUGREPORT=\"3.25.2\"",
+        "-DPACKAGE_URL=\"\"",
+        "-DPACKAGE=\"hplip\"",
+        "-DVERSION=\"3.25.2\"",
+        "-DHAVE_STDIO_H=1",
+        "-DHAVE_STDLIB_H=1",
+        "-DHAVE_STRING_H=1",
+        "-DHAVE_INTTYPES_H=1",
+        "-DHAVE_STDINT_H=1",
+        "-DHAVE_STRINGS_H=1",
+        "-DHAVE_SYS_STAT_H=1",
+        "-DHAVE_SYS_TYPES_H=1",
+        "-DHAVE_UNISTD_H=1",
+        "-DSTDC_HEADERS=1",
+        "-DHAVE_DLFCN_H=1",
+        "-DLT_OBJDIR=\".libs/\"",
+        "-DHAVE_LIBDL=1",
+        "-DHAVE_PTHREAD_H=1",
+        "-DHAVE_JPEGLIB_H=1",
+        "-DHAVE_UINT32_T=1",
+        "-DHAVE_LIBHPIP=1",
+        "-DDISABLE_IMAGEPROCESSOR=1",
+        "-D_FILE_OFFSET_BITS=64",
+        "-D_LARGEFILE_SOURCE",
+        "-D_LARGEFILE64_SOURCE",
+        "-DAPDK_LITTLE_ENDIAN",
+        "-fno-exceptions",
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-DCONFDIR=\"\"",
+        "-Wno-pointer-bool-conversion",
+        "-Wno-register",
+        "-Wno-tautological-pointer-compare",
+        "-Wno-constant-conversion",
+        "-Wno-missing-braces",
+        "-Wno-tautological-constant-out-of-range-compare",
+    ],
+    visibility: [
+        "//visibility:private",
+    ],
+}
+
+cc_binary {
+    name: "hpps",
+    defaults: [
+        "hplip-defaults",
+    ],
+    srcs: [
+        "prnt/hpps/hppsfilter.c",
+        "prnt/hpps/psutil.c",
+        "prnt/hpps/pserror.c",
+        "prnt/hpps/psbooklet.c",
+        "prnt/hpps/psspec.c",
+    ],
+    shared_libs: [
+        "libcups",
+        "libppd",
+    ],
+}
+
+cc_binary {
+    name: "hpcups",
+    defaults: [
+        "hplip-defaults",
+    ],
+    local_include_dirs: [
+        "io/hpmud",
+        "common",
+    ],
+    cppflags: [
+        "-Wno-non-virtual-dtor",
+        "-Wno-delete-non-abstract-non-virtual-dtor",
+    ],
+    srcs: [
+        "prnt/hpcups/HPCupsFilter.cpp",
+        "prnt/hpcups/dbuscomm.cpp",
+        "prnt/hpcups/Compressor.cpp",
+        "prnt/hpcups/Mode2.cpp",
+        "prnt/hpcups/Mode3.cpp",
+        "prnt/hpcups/Mode9.cpp",
+        "prnt/hpcups/Mode10.cpp",
+        "prnt/hpcups/ModeDeltaPlus.cpp",
+        "prnt/hpcups/ModeJbig.cpp",
+        "prnt/hpcups/ErnieFilter.cpp",
+        "prnt/hpcups/EncapsulatorFactory.cpp",
+        "prnt/hpcups/Encapsulator.cpp",
+        "prnt/hpcups/Pcl3.cpp",
+        "prnt/hpcups/Pcl3Gui.cpp",
+        "prnt/hpcups/Pcl3Gui2.cpp",
+        "prnt/hpcups/LJMono.cpp",
+        "prnt/hpcups/LJColor.cpp",
+        "prnt/hpcups/LJFastRaster.cpp",
+        "prnt/hpcups/LJJetReady.cpp",
+        "prnt/hpcups/LJZjStream.cpp",
+        "prnt/hpcups/LJZxStream.cpp",
+        "prnt/hpcups/Job.cpp",
+        "prnt/hpcups/Pipeline.cpp",
+        "prnt/hpcups/Processor.cpp",
+        "prnt/hpcups/RasterSender.cpp",
+        "prnt/hpcups/ColorMatcher.cpp",
+        "prnt/hpcups/Halftoner.cpp",
+        "prnt/hpcups/Scaler.cpp",
+        "prnt/hpcups/dj400ColorMaps.cpp",
+        "prnt/hpcups/dj600ColorMaps.cpp",
+        "prnt/hpcups/dj970ColorMaps.cpp",
+        "prnt/hpcups/dj8xxColorMaps.cpp",
+        "prnt/hpcups/dj4100ColorMaps.cpp",
+        "prnt/hpcups/BreakTables.cpp",
+        "prnt/hpcups/Utils.cpp",
+        "prnt/hpcups/SystemServices.cpp",
+        "prnt/hpcups/QuickConnect.cpp",
+        "prnt/hpcups/ModeJpeg.cpp",
+        "prnt/hpcups/Lidil.cpp",
+        "prnt/hpcups/LidilCompress.cpp",
+        "prnt/hpcups/dj3320ColorMaps.cpp",
+        "prnt/hpcups/dj3600ColorMaps.cpp",
+        "prnt/hpcups/Hbpl1.cpp",
+        "prnt/hpcups/Hbpl1_Wrapper.cpp",
+        "prnt/hpcups/genPCLm.cpp",
+        "prnt/hpcups/genJPEGStrips.cpp",
+        "prnt/hpcups/RunLenEncoding.cpp",
+        "prnt/hpcups/jccolor.c",
+        "prnt/hpcups/jdatadbf.c",
+        "common/utils.c",
+    ],
+    shared_libs: [
+        "libcups",
+        "libjpeg",
+        "libz",
+        "libppd",
+    ],
+}

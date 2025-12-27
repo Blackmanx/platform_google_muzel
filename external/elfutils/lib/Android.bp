@@ -1,0 +1,26 @@
+package {
+    default_applicable_licenses: ["external_elfutils_license"],
+}
+
+cc_library_static {
+    name: "libeu",
+    defaults: ["elfutils_defaults"],
+    srcs: ["*.c"],
+    exclude_srcs: [
+        "color.c", // uses argp
+        "dynamicsizehash*.c",
+        "printversion.c", // uses argp
+        "crc32.c",
+    ],
+
+    host_supported: true,
+    native_bridge_supported: true,
+    vendor_available: true,
+
+    min_sdk_version: "apex_inherit",
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.tethering", // For standalone bpf loader binary that depends on libbpf.
+    ],
+}

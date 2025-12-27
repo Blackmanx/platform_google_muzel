@@ -1,0 +1,288 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+config MISSING_BOARD_RESET
+	bool
+	help
+	  Selected by boards that don't provide a do_board_reset()
+	  implementation. This activates a stub that logs the missing
+	  board reset and halts execution.
+
+config ROMSTAGE_ADA
+	bool
+	help
+	  Selected by features that use Ada code in romstage.
+
+config RAMSTAGE_ADA
+	bool
+	help
+	  Selected by features that use Ada code in ramstage.
+
+config RAMSTAGE_LIBHWBASE
+	bool
+	select RAMSTAGE_ADA
+	help
+	  Selected by features that require `libhwbase` in ramstage.
+
+config ROMSTAGE_LIBHWBASE
+	bool
+	select ROMSTAGE_ADA
+	help
+	  Selected by features that require `libhwbase` in romstage.
+
+config FLATTENED_DEVICE_TREE
+	bool
+	help
+	  Selected by features that require to parse and manipulate a flattened
+	  devicetree in ramstage.
+
+config HAVE_SPD_IN_CBFS
+	bool
+	help
+	  If enabled, add support for adding spd.hex files in cbfs as spd.bin
+	  and locating it runtime to load SPD.
+
+config DIMM_MAX
+	int
+	default 4
+	help
+	  Total number of memory DIMM slots available on motherboard.
+	  It is multiplication of number of channel to number of DIMMs per
+	  channel
+
+config MAX_SOCKET
+	int
+	default 1
+
+config DIMM_SPD_SIZE
+	int
+	default 256
+	help
+	  Total SPD size that will be used for DIMM.
+	  Ex: DDR3 256, DDR4 512.
+
+config SPD_READ_BY_WORD
+	bool
+
+config SPD_CACHE_IN_FMAP
+	bool
+	default n
+	help
+	  Enables capability to cache DIMM SPDs in a dedicated FMAP region
+	  to speed loading of SPD data. Currently requires board-level
+	  romstage implementation to read/write/utilize cached SPD data.
+	  When the default FMAP is used, will create a region named RW_SPD_CACHE
+	  to store the cached SPD data.
+
+config SPD_CACHE_FMAP_NAME
+	string
+	depends on SPD_CACHE_IN_FMAP
+	default "RW_SPD_CACHE"
+	help
+	  Name of the FMAP region created in the default FMAP to cache SPD data.
+
+if RAMSTAGE_LIBHWBASE && !ROMSTAGE_LIBHWBASE
+
+config HWBASE_DYNAMIC_MMIO
+	def_bool y
+
+endif
+
+if ROMSTAGE_LIBHWBASE
+
+config HWBASE_STATIC_MMIO
+	def_bool y
+
+endif
+
+if RAMSTAGE_LIBHWBASE || ROMSTAGE_LIBHWBASE
+
+config HWBASE_DEFAULT_MMCONF
+	hex
+	default ECAM_MMCONF_BASE_ADDRESS
+
+config HWBASE_DIRECT_PCIDEV
+	def_bool y
+
+endif
+
+config NO_FMAP_CACHE
+	bool
+	help
+	  If your platform really doesn't want to use an FMAP cache (e.g. due to
+	  space constraints), you can select this to disable warnings and save
+	  a bit more code.
+
+config ESPI_DEBUG
+	bool
+	help
+	  This option enables eSPI library helper functions for displaying debug
+	  information.
+
+config NO_CBFS_MCACHE
+	bool
+	help
+	  Disables the CBFS metadata cache. This means that your platform does
+	  not need to provide a CBFS_MCACHE section in memlayout and can save
+	  the associated CAR/SRAM size. In that case every single CBFS file
+	  lookup must re-read the same CBFS directory entries from flash to find
+	  the respective file.
+
+config CBFS_CACHE_ALIGN
+	int
+	default 8
+	help
+	  Sets the alignment of the buffers returned by the cbfs_cache.
+
+config CBFS_PRELOAD
+	bool
+	depends on COOP_MULTITASKING
+	help
+	  When enabled it will be possible to preload CBFS files into the
+	  cbfs_cache. This helps reduce boot time by loading the files
+	  in the background before they are actually required. This feature
+	  depends on the read-only boot_device having a DMA controller to
+	  perform the background transfer.
+
+config DECOMPRESS_OFAST
+	bool
+	depends on COMPILER_GCC
+	default y
+	help
+	  Compile the decompressing function in -Ofast instead of standard -Os
+
+config PROBE_RAM
+	def_bool y if VENDOR_EMULATION
+	help
+	  When enabled it will be possible to detect usable RAM using probe_ram
+	  function.
+
+menu "Boot Logo Configuration"
+
+config BMP_LOGO
+	bool "Enable logo"
+	default n
+	help
+	  Uses the FSP to display the boot logo. This method supports a
+	  BMP file only. The uncompressed size can be up to 1 MB. The logo can
+	  be compressed based on either `BMP_LOGO_COMPRESS_*` configs (default LZMA).
+
+config HAVE_CUSTOM_BMP_LOGO
+	def_bool n
+	depends on BMP_LOGO
+
+config HAVE_BMP_LOGO_COMPRESS_LZMA
+	bool
+	depends on BMP_LOGO
+	default y
+
+choice
+	prompt "BMP Logo compression"
+	depends on BMP_LOGO
+	default BMP_LOGO_COMPRESS_LZMA if HAVE_BMP_LOGO_COMPRESS_LZMA
+	default BMP_LOGO_COMPRESS_LZ4
+
+config BMP_LOGO_COMPRESS_LZMA
+	bool "Use LZMA compression for BMP logo"
+	help
+	  This option enables the use of LZMA compression for the BMP logo.
+	  LZMA is a lossless compression algorithm that can significantly reduce
+	  the size of the logo, without sacrificing quality.
+
+	  If this option is not enabled, the BMP logo will be uncompressed.
+
+config BMP_LOGO_COMPRESS_LZ4
+	bool "Compress BMP logo using LZ4"
+	help
+	  This option enables compression of the BMP logo using the LZ4 algorithm.
+	  Although the size reduction is not as efficient as LZMA compression, however,
+	  it can also make the boot process slightly faster compared to the LZMA.
+
+endchoice
+
+config BMP_LOGO_FILE_NAME
+	string "Logo file"
+	depends on BMP_LOGO
+	default "3rdparty/blobs/mainboard/\$(MAINBOARDDIR)/logo.bmp"
+
+config HAVE_ESOL_SUPPORT_FOR_LOW_BATTERY_INDICATOR
+	bool
+	depends on FSP_UGOP_EARLY_SIGN_OF_LIFE || MAINBOARD_HAS_EARLY_LIBGFXINIT
+	help
+	  Enable low-battery indicator support in eSOL.
+
+	  This option should be selected if the eSOL feature (using either libgfxinit or FSP uGOP)
+	  supports displaying a low-battery indicator.
+
+	  Platforms selecting `MAINBOARD_HAS_EARLY_LIBGFXINIT` can default enable this option.
+
+	  For platforms using FSP uGOP, this option should only be enabled if uGOP has implemented
+	  the necessary low-battery handling. This allows platforms to control low-battery
+	  indicator support based on uGOP readiness.
+
+config PLATFORM_HAS_LOW_BATTERY_INDICATOR
+	bool "Display low battery indicator"
+	depends on BMP_LOGO
+	help
+	  If enabled, this option displays a low battery indicator screen. This screen can be
+	  used to warn the user that the battery is low and that they should plug in the device.
+
+	  This option requires that the system have a display and that the BMP_LOGO option is
+	  enabled.
+
+if PLATFORM_HAS_LOW_BATTERY_INDICATOR
+
+config PLATFORM_LOW_BATTERY_SHUTDOWN_DELAY_SEC
+	int
+	default 5
+	help
+	  Delay, in seconds, before system shutdown due to low battery.
+	  This delay allows the user to observe the low-battery indicator.
+	  The default value of 5 seconds aligns with standard user experience (UX) practices.
+	  Platforms may override this value based on specific product requirements.
+
+config PLATFORM_HAS_EARLY_LOW_BATTERY_INDICATOR
+	bool "Display low battery indicator in romstage"
+	depends on HAVE_ESOL_SUPPORT_FOR_LOW_BATTERY_INDICATOR
+	help
+	  If enabled, this option displays a low battery indicator during romstage (before memory
+	  is available) in text mode in the firmware and defer the firmware update. This screen
+	  can be used to warn the user that the battery is low and that they should plug in the
+	  device.
+
+config PLATFORM_LOW_BATTERY_INDICATOR_LOGO_PATH
+	string "Path to low battery logo file"
+	default "3rdparty/blobs/mainboard/\$(MAINBOARDDIR)/low_battery.bmp"
+endif
+
+config SPLASH_SCREEN_FOOTER
+	bool "Enable custom footer on firmware splash screen"
+	depends on BMP_LOGO
+	help
+	  Enable this option to display a custom footer image or logo on the
+	  firmware splash screen during the boot process. This provides an
+	  additional branding opportunity for device manufacturers, allowing
+	  them to display a logo or other graphic at the bottom of the
+	  splash screen, complementing the main OEM splash image.
+
+config SPLASH_SCREEN_FOOTER_LOGO_PATH
+	string "Path to splash screen footer logo file"
+	depends on SPLASH_SCREEN_FOOTER
+	default "3rdparty/blobs/mainboard/\$(MAINBOARDDIR)/logo.bmp"
+
+endmenu
+
+config HAVE_EARLY_POWEROFF_SUPPORT
+	bool
+	help
+	  Enable platform-specific early power off support.
+
+	  This option should be selected if the platform requires special handling
+	  to power off the system before memory initialization. This is often
+	  necessary on Intel platforms, as directly powering off before memory
+	  initialization is typically not supported by the chipset.
+
+	  Selecting this option indicates that the platform implements the
+	  `platform_do_early_poweroff()` function, which performs the
+	  necessary hardware operations to initiate an early power off sequence.
+	  This might involve configuring hardware registers, sending commands to
+	  power management controllers, or other platform-specific operations.

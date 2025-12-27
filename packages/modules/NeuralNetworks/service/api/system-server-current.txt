@@ -1,0 +1,9 @@
+// Signature format: 2.0
+package com.android.server.ondeviceintelligence {
+
+  @FlaggedApi("android.app.ondeviceintelligence.flags.enable_on_device_intelligence_module") public interface OnDeviceIntelligenceManagerLocal {
+    method public int getInferenceServiceUid();
+  }
+
+}
+

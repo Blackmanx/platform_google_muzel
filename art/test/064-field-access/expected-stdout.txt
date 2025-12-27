@@ -1,0 +1,6 @@
+JNI_OnLoad called
+good
+Got expected failure
+Got expected failure
+GetInstanceFieldOnUninitializedThis allowed for app compat
+Got expected failure

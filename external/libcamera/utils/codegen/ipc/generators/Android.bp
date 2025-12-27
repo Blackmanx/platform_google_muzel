@@ -1,0 +1,9 @@
+python_library_host {
+    name: "libcamera_mojom_libcamera_generator",
+    srcs: [
+        "mojom_libcamera_generator.py",
+    ],
+    libs: [
+        "libcamera_mojom_lib",
+    ],
+}

@@ -1,0 +1,8 @@
+on post-fs-data
+    mkdir /data/vendor/flashrom
+    mkdir /data/vendor/flashrom/tmp
+    mount tmpfs tmpfs /data/vendor/flashrom/tmp nosuid nodev noexec rw context=u:object_r:firmware_tool_data_file:s0
+    restorecon /data/vendor/flashrom
+
+on shutdown
+    umount /data/vendor/flashrom/tmp

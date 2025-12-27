@@ -1,0 +1,100 @@
+package {
+    default_applicable_licenses: ["external_flashrom_license"],
+    default_team: "trendy_team_desktop_manufacturing_and_serviceability",
+}
+
+genrule {
+    name: "flashrom_tester_built_rs_gen",
+    srcs: ["src/out/built.rs"],
+    cmd: "cp $(in) $(genDir)/built.rs",
+    out: ["built.rs"],
+}
+
+rust_defaults {
+    name: "flashrom_tester_defaults",
+    edition: "2021",
+    features: ["cli"],
+    rustlibs: [
+        "libatty",
+        "libchrono",
+        "libclap",
+        "liblibc",
+        "liblibflashrom",
+        "liblog_rust",
+        // Pin the rand crate to 0.8 to maintain compatibility with upstream code.
+        // Upstream uses `thread_rng()`, which was deprecated in rand 0.9 and later.
+        // The Android build system provides a newer version by default, which would
+        // cause a build failure. This pin can be removed once upstream supports a
+        // newer version of the rand crate.
+        "librand-0.8",
+        "libserde_json",
+        "libflashrom_abstraction",
+    ],
+}
+
+rust_binary {
+    name: "flashrom_tester",
+    host_supported: true,
+    crate_name: "flashrom_tester",
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.6.0",
+    srcs: [
+        "src/main.rs",
+        ":flashrom_tester_built_rs_gen",
+    ],
+    defaults: ["flashrom_tester_defaults"],
+    rustlibs: ["libflashrom_tester"],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    vendor: true,
+}
+
+rust_test {
+    name: "flashrom_tester_test_src_lib",
+    host_supported: true,
+    crate_name: "flashrom_tester",
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.6.0",
+    crate_root: "src/lib.rs",
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    test_options: {
+        unit_test: true,
+    },
+    defaults: ["flashrom_tester_defaults"],
+}
+
+rust_test {
+    name: "flashrom_tester_test_src_main",
+    host_supported: true,
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.6.0",
+    srcs: [
+        "src/main.rs",
+        ":flashrom_tester_built_rs_gen",
+    ],
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    test_options: {
+        unit_test: true,
+    },
+    defaults: ["flashrom_tester_defaults"],
+    rustlibs: ["libflashrom_tester"],
+}
+
+rust_library {
+    name: "libflashrom_tester",
+    host_supported: true,
+    crate_name: "flashrom_tester",
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.6.0",
+    crate_root: "src/lib.rs",
+    vendor_available: true,
+    defaults: ["flashrom_tester_defaults"],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}

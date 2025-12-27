@@ -1,0 +1,10 @@
+Ensures that ClassLinker::CreateArrayClass does not create array classes with temporary class
+as their component type.
+
+CreateArrayClass needs to be able to create array classes whose component type is an erroneous
+class, including erroneous class that is not resolved. At the same time other unresolved classes
+and temporary classes in particular should not be leaked as component types.
+
+This test tries to create an array class and forces class load of the component type to fail.
+Another thread registers a temporary component class before CreateArrayClass calls LookupClass
+to check for erroneous component class.

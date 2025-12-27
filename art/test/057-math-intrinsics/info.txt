@@ -1,0 +1,3 @@
+Tests for math intrinsics:
+  - signum {float|double},
+  - copySign {float|double}.

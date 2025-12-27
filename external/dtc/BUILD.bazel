@@ -1,0 +1,135 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+COPTS = [
+    "-Wall",
+    "-Werror",
+    "-Wno-macro-redefined",
+    "-Wno-missing-field-initializers",
+    "-Wno-sign-compare",
+    "-Wno-unused-parameter",
+]
+
+cc_library(
+    name = "libfdt",
+    srcs = glob([
+        "libfdt/*.h",
+        "libfdt/*.c",
+    ]),
+    copts = COPTS,
+    includes = ["libfdt"],
+)
+
+genrule(
+    name = "dtc_lexer_srcs",
+    srcs = ["dtc-lexer.l"],
+    outs = ["dtc-lexer.lex.c"],
+    cmd = "export PATH= ; $(execpath @kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:flex) -o $@ $<",
+    tools = ["@kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:flex"],
+)
+
+genrule(
+    name = "dtc_parser_srcs",
+    srcs = ["dtc-parser.y"],
+    outs = [
+        "dtc-parser.c",
+        "dtc-parser.h",
+    ],
+    cmd = "export PATH= ; $(execpath @kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:bison) -d -o $(location dtc-parser.c) $(location dtc-parser.y)",
+    tools = [
+        "@kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:bison",
+    ],
+)
+
+UTILS = [
+    "util.c",
+    "util.h",
+    ":version_gen_header",
+]
+
+genrule(
+    name = "version_gen_header",
+    srcs = [
+        "METADATA",
+        "METADATA_version.sed",
+        "version_gen.h.in",
+    ],
+    outs = ["version_gen.h"],
+    cmd = """
+        # Avoid accessing host tools.
+        export PATH=
+        version="$$($(execpath @kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:sed) \\
+            -f $(location METADATA_version.sed) \\
+            -n $(location METADATA))-Android-build"
+        $(execpath @kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:sed) \\
+            s/@VCS_TAG@/$${version}/ $(location version_gen.h.in) > $@
+    """,
+    tools = ["@kleaf//build/kernel/kleaf/bootstrap_hermetic_tools:sed"],
+)
+
+cc_binary(
+    name = "dtc",
+    srcs = UTILS + [
+        "checks.c",
+        "data.c",
+        "dtc.c",
+        "dtc.h",
+        "flattree.c",
+        "fstree.c",
+        "livetree.c",
+        "srcpos.c",
+        "srcpos.h",
+        "treesource.c",
+        ":dtc_lexer_srcs",
+        ":dtc_parser_srcs",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    visibility = [
+        "@kleaf//build/kernel:__subpackages__",
+    ],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtget",
+    srcs = UTILS + [
+        "fdtget.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtput",
+    srcs = UTILS + [
+        "fdtput.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtdump",
+    srcs = UTILS + [
+        "fdtdump.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    deps = [":libfdt"],
+)
+
+cc_binary(
+    name = "fdtoverlay",
+    srcs = UTILS + [
+        "fdtoverlay.c",
+    ],
+    copts = COPTS,
+    defines = ["NO_YAML"],
+    visibility = [
+        "@kleaf//build/kernel:__subpackages__",
+    ],
+    deps = [":libfdt"],
+)

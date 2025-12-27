@@ -1,0 +1,124 @@
+/*
+ * Copyright 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package {
+    // Inherits all licenses from parent to get Apache 2.0 and package name
+    default_applicable_licenses: [
+        "packages_modules_NeuralNetworks_license",
+    ],
+}
+
+apex_key {
+    name: "com.android.neuralnetworks.key",
+    public_key: "com.android.neuralnetworks.avbpubkey",
+    private_key: "com.android.neuralnetworks.pem",
+}
+
+android_app_certificate {
+    name: "com.android.neuralnetworks.certificate",
+    certificate: "com.android.neuralnetworks",
+}
+
+filegroup {
+    name: "com.android.neuralnetworks-androidManifest",
+    srcs: ["AndroidManifest.xml"],
+}
+
+apex_defaults {
+    name: "com.android.neuralnetworks-defaults",
+    defaults: ["r-launched-apex-module"],
+    androidManifest: ":com.android.neuralnetworks-androidManifest",
+    native_shared_libs: [
+        "libneuralnetworks",
+    ],
+    compile_multilib: "both",
+    key: "com.android.neuralnetworks.key",
+    certificate: ":com.android.neuralnetworks.certificate",
+    // Indicates that pre-installed version of this apex can be compressed.
+    // Whether it actually will be compressed is controlled on per-device basis.
+    compressible: true,
+}
+
+apex {
+    name: "com.android.neuralnetworks",
+    defaults: [
+        "com.android.neuralnetworks-defaults",
+    ],
+    manifest: "manifest.json",
+    prebuilts: ["current_sdkinfo"],
+    bootclasspath_fragments: select(release_flag("RELEASE_ONDEVICE_INTELLIGENCE_MODULE"), {
+        true: ["com.android.ondeviceintelligence-bootclasspath-fragment"],
+        default: [],
+    }),
+    systemserverclasspath_fragments: select(release_flag("RELEASE_ONDEVICE_INTELLIGENCE_MODULE"), {
+        true: ["com.android.ondeviceintelligence-systemserverclasspath-fragment"],
+        default: [],
+    }),
+    licenses: [
+        "packages_modules_NeuralNetworks_license",
+        "opensourcerequest",
+    ],
+}
+
+sdk {
+    enabled: select(release_flag("RELEASE_ONDEVICE_INTELLIGENCE_MODULE"), {
+        true: true,
+        default: false,
+    }),
+    name: "neuralnetworks-module-sdk",
+    apexes: [
+        // Adds exportable dependencies of the APEX to the sdk,
+        // e.g. *classpath_fragments.
+        "com.android.neuralnetworks",
+    ],
+}
+
+// Encapsulate the contributions made by com.android.neuralnetworks to the bootclasspath.
+bootclasspath_fragment {
+    enabled: select(release_flag("RELEASE_ONDEVICE_INTELLIGENCE_MODULE"), {
+        true: true,
+        default: false,
+    }),
+    name: "com.android.ondeviceintelligence-bootclasspath-fragment",
+    contents: ["framework-ondeviceintelligence"],
+    apex_available: ["com.android.neuralnetworks"],
+    hidden_api: {
+        split_packages: ["*"],
+    },
+    additional_stubs: [
+        "android-non-updatable",
+    ],
+    // The bootclasspath_fragments that provide APIs on which this depends.
+    fragments: [
+        {
+            apex: "com.android.art",
+            module: "art-bootclasspath-fragment",
+        },
+    ],
+}
+
+// Encapsulate the contributions made by the com.android.crashrecovery to the systemserverclasspath.
+systemserverclasspath_fragment {
+    // This fragment will be enabled using release_crashrecovery_module flag
+    enabled: select(release_flag("RELEASE_ONDEVICE_INTELLIGENCE_MODULE"), {
+        true: true,
+        default: false,
+    }),
+
+    name: "com.android.ondeviceintelligence-systemserverclasspath-fragment",
+    contents: ["service-ondeviceintelligence"],
+    apex_available: ["com.android.neuralnetworks"],
+}

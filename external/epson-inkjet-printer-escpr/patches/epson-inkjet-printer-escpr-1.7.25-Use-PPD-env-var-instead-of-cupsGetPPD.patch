@@ -1,0 +1,25 @@
+From 5191289330d7d91d9ecb01bb3f4d69810a0efdaa Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Fri, 7 Feb 2025 09:24:57 -0700
+Subject: [PATCH] Use PPD env var instead of cupsGetPPD
+
+---
+ src/wrapper.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/wrapper.c b/src/wrapper.c
+index 8603a7a..cb72a68 100644
+--- a/src/wrapper.c
++++ b/src/wrapper.c
+@@ -427,7 +427,7 @@ get_option_for_ppd (const char *printer, filter_option_t *filter_opt_p)
+ 	char *tok;
+ 
+ 	/* Get option from PPD. */
+-	ppd_path = (char *) cupsGetPPD (printer);
++	ppd_path = getenv("PPD");
+ 	ppd_p = ppdOpenFile (ppd_path);
+ 	if(NULL == ppd_p){
+ 		return 1;
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+

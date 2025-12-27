@@ -1,0 +1,12 @@
+{
+  "presubmit": [
+    // Unit tests for CoreCompatChangeRule
+    {
+      "name": "CtsLibcoreTestCases_compat"
+    },
+    // CTS test for CompatChanges System
+    {
+      "name": "CtsAppCompatHostTestCases"
+    }
+  ]
+}

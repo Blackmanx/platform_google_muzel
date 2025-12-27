@@ -1,0 +1,33 @@
+From 16d1f4640439bdf84f842e075ce6def589e2f94e Mon Sep 17 00:00:00 2001
+From: Terence Tritton <ttritton@google.com>
+Date: Thu, 29 May 2025 11:03:04 +0000
+Subject: [PATCH] ANDROID: Define NSEC_PER_SEC as long long
+
+NSEC_PER_SEC is a long which casues overflow issues or arm32.
+Defined as long long to stop overflow.
+
+Bug: 422759683
+Change-Id: I58f77306ca3f850d6e4ab4930937ce9dcf8a5dd5
+Link: https://lore.kernel.org/all/20250805162153.952693-1-wakel@google.com/
+Signed-off-by: Wake Liu <wakel@google.com>
+Test: atest vts_linux_kselftest_arm_32:timers_set-timer-lat_arm_32
+---
+ include/vdso/time64.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/vdso/time64.h b/include/vdso/time64.h
+index b40cfa2aa33c8..07641b27d139a 100644
+--- a/include/vdso/time64.h
++++ b/include/vdso/time64.h
+@@ -8,7 +8,7 @@
+ #define NSEC_PER_USEC	1000L
+ #define NSEC_PER_MSEC	1000000L
+ #define USEC_PER_SEC	1000000L
+-#define NSEC_PER_SEC	1000000000L
++#define NSEC_PER_SEC	1000000000LL
+ #define PSEC_PER_SEC	1000000000000LL
+ #define FSEC_PER_SEC	1000000000000000LL
+ 
+-- 
+2.50.1.703.g449372360f-goog
+

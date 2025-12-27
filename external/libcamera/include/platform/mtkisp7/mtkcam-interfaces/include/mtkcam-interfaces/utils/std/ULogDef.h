@@ -1,0 +1,296 @@
+/*
+ * Copyright (C) 2022 MediaTek Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef INCLUDE_MTKCAM_INTERFACES_UTILS_STD_ULOGDEF_H_
+#define INCLUDE_MTKCAM_INTERFACES_UTILS_STD_ULOGDEF_H_
+
+namespace NSCam {
+namespace Utils {
+namespace ULog {
+
+typedef unsigned int ModuleId;
+typedef unsigned int RequestSerial;
+
+static constexpr unsigned int ULOG_LAYER_MASK = 0xfff00000;
+static constexpr unsigned int ULOG_GROUP_MASK = 0x000ff000;
+static constexpr unsigned int ULOG_RESERVED_MASK = 0x00000800;
+
+inline constexpr ModuleId MODULE_ID(unsigned int layerBits,
+                                    unsigned int groupBits,
+                                    unsigned int reserved,
+                                    unsigned int moduleSerial) {
+  return static_cast<ModuleId>((layerBits << 20) | (groupBits << 12) |
+                               (reserved << 11) | moduleSerial);
+}
+
+// Module will be logged only if (moduleId & filter & 0xfff00000)) != 0 &&
+// (moduleId & filter & 0x000ff0000) != 0
+// Either layerBits or filterBits must NOT be zero
+enum ModuleIdEnum {
+  /*
+   * NOTE: You MUST also fill the module name in ULogTable.cpp
+   */
+  MOD_INVALID = 0,  // Never print any log
+
+  // -- HAL & Camera device
+  _MOD_HAL = MODULE_ID(0x001, 0x01, 0, 0),
+  MOD_CAMERA_HAL_SERVER,
+  MOD_CAMERA_HAL_IPC_SERVER,
+  MOD_ISP_HAL_SERVER,
+  MOD_CAMDEV3_IMP = MODULE_ID(0x001, 0x07, 0, 1),
+  MOD_APP_STREAM_MGR,
+  _MOD_CUSTOM_LAYER = MODULE_ID(0x001, 0x80, 0, 0),
+  MOD_CUST_ZONE,
+  MOD_HAL3_PLUS = MOD_CUST_ZONE,
+  MOD_DPTZ_DEVICE,
+  MOD_NAVIGATION_DEVICE,
+  MOD_LOWLATENCY_DEVICE,
+  MOD_FISHEYE_DEVICE,
+  MOD_CAMERA_DEVICE = MODULE_ID(0x001, 0x87, 0, 1),  // HAL3 interface only
+  MOD_POSTPROC_DEVICE,
+
+  // -- Pipeline model
+  _MOD_PIPELINE_CAPTURE_GROUP = MODULE_ID(0x002, 0x02, 0, 0),
+  MOD_PIPELINE_PRERELEASE,
+  MOD_PIPELINE_MODEL_CAPTURE,
+  MOD_PIPELINE_MODEL = MODULE_ID(0x002, 0x07, 0, 1),
+  MOD_DEFAULT_PIPELINE_MODEL,
+  MOD_4CELL_PIPELINE_MODEL,
+  MOD_MULTICAM_PIPELINE_MODEL,
+  MOD_SMVR_PIPELINE_MODEL,
+  MOD_STREAM_PIPELINE_MODEL,
+  MOD_ISP_PIPELINE_MODEL,
+  MOD_PIPELINE_POLICY,
+  MOD_FEATURE_SETTING_POLICY,
+  MOD_PIPELINE_CONTEXT,
+  MOD_PIPELINE_UTILITY,
+  MOD_ZSL,
+
+  // -- Hw Node
+  MOD_HW_NODE = MODULE_ID(0x004, 0x01, 0, 0),
+  MOD_P1_NODE = MODULE_ID(0x004, 0x01, 0, 1),  // Basic/P1/3A filterBits = 0x1
+  MOD_P1_NODE_2,
+  MOD_P1_NODE_3,
+  MOD_P1_NODE_4,
+  MOD_P2_CAP_NODE = MODULE_ID(0x004, 0x02, 0, 1),  // Capture filterBits = 0x2
+  MOD_JPEG_NODE,
+  MOD_RAW16_NODE,
+  MOD_RAW16_NODE_2,
+  MOD_RAW16_NODE_3,
+  MOD_RAW16_NODE_4,
+  MOD_JPS_NODE,
+  MOD_PACK_NODE,
+  MOD_P2_STR_NODE = MODULE_ID(0x004, 0x04, 0, 1),  // Streaming filterBits = 0x4
+  MOD_FD_NODE,
+  MOD_FD_NODE_2,
+  MOD_FD_NODE_3,
+  MOD_FD_NODE_4,
+  MOD_PDE_NODE,
+  MOD_PREPROC_NODE,
+  MOD_PREPROC_NODE_2,
+  MOD_PREPROC_NODE_3,
+  MOD_PREPROC_NODE_4,
+  MOD_BASE_NODE = MODULE_ID(0x004, 0x06, 0, 1),
+  MOD_P2N_COMMON,
+
+  // -- P2 processors, feature pipe
+  MOD_3A_FRAMEWORK = MODULE_ID(0x008, 0x01, 0, 0),
+  MOD_3A_FRAMEWORK_THREAD,
+  MOD_3A_FRAMEWORK_FLOW,
+  MOD_3A_FRAMEWORK_RESULT,
+  MOD_3A_FRAMEWORK_IP_BASE,
+  MOD_ISP_MGR,
+  MOD_P1_SYNCHELPER,
+  MOD_P2_CAP_PROC = MODULE_ID(0x008, 0x02, 0, 1),
+  MOD_FPIPE_CAPTURE,
+  MOD_P2_STR_PROC = MODULE_ID(0x008, 0x04, 0, 1),
+  MOD_FPIPE_STREAMING,
+  MOD_P2_PROC_COMMON = MODULE_ID(0x008, 0x06, 0, 1),
+  MOD_P2_BASIC_PROC,
+  MOD_FPIPE_COMMON,
+  MOD_VRP_YUVMCNR = MODULE_ID(0x008, 0x08, 0, 1),
+  MOD_VRP_YUVMCNR_LT,
+  MOD_VRP_BOKEH,
+
+  // -- Feature pipe nodes
+  _MOD_CAPTURE_FPNODE_BEGIN = MODULE_ID(0x010, 0x02, 0, 0),
+  MOD_CAPTURE_ROOT,
+  MOD_CAPTURE_RAW,
+  MOD_CAPTURE_BSS,
+  MOD_CAPTURE_P2A,
+  MOD_CAPTURE_MULTIFRAME,
+  MOD_CAPTURE_DEPTH,
+  MOD_CAPTURE_BOKEH,
+  MOD_CAPTURE_FUSION,
+  MOD_CAPTURE_MDP,
+  MOD_CAPTURE_FD,
+  MOD_CAPTURE_YUV,
+  MOD_CAPTURE_YUV_1,
+  MOD_CAPTURE_YUV_2,
+  MOD_CAPTURE_YUV_3,
+
+  _MOD_STREAMING_FPNODE_BEGIN = MODULE_ID(0x010, 0x04, 0, 0),
+  MOD_STREAMING_ROOT,
+  MOD_STREAMING_P2A,
+  MOD_STREAMING_ME,
+  MOD_STREAMING_DS,
+  MOD_STREAMING_DIP,
+  MOD_STREAMING_P2NR,
+  MOD_STREAMING_P2SM,
+  MOD_STREAMING_P2SW,
+  MOD_STREAMING_VNR,
+  MOD_STREAMING_P2A_MDP,
+  MOD_STREAMING_RSC,
+  MOD_STREAMING_MSS,
+  MOD_STREAMING_MSF,
+  MOD_STREAMING_DEPTH,
+  MOD_STREAMING_DEPTH_POST,
+  MOD_STREAMING_BOKEH,
+  MOD_STREAMING_VENDOR_MDP,
+  MOD_STREAMING_FOV,
+  MOD_STREAMING_FOV_FEFM,
+  MOD_STREAMING_FOV_WARP,
+  MOD_STREAMING_EIS,
+  MOD_STREAMING_EIS_WARP,
+  MOD_STREAMING_MDP,
+  MOD_STREAMING_TRACKING,
+  MOD_STREAMING_ROINAV,
+  MOD_STREAMING_HELPER,
+  _MOD_STREAMING_VENDOR =
+      MODULE_ID(0x010, 0x84, 0, 0),  // group 0x80 for 3rd-party
+  MOD_STREAMING_TPI,
+  MOD_STREAMING_TPI_DISP,
+  MOD_STREAMING_TPI_ASYNC,
+  MOD_STREAMING_TPI_PLUGIN,
+  MOD_STREAMING_TPI_APP,
+  MOD_FPNODE_UNKNOWN = MODULE_ID(0x010, 0xff, 0, 0),
+  MOD_FPNODE_SEQ_QUEUE,
+
+  // -- VideoReprocessPipe nodes
+  _MOD_VRP_NODE_BEGIN = MODULE_ID(0x012, 0x02, 0, 0),
+  MOD_VRP_P2A,
+  MOD_VRP_NODE_BOKEH,
+  MOD_VRP_NODE_GF,
+
+  // -- Sub feature pipe & its nodes
+  _MOD_SUB_FPIPE = MODULE_ID(0x020, 0x01, 0, 0),
+  MOD_SFPIPE_DEPTH = MODULE_ID(0x020, 0x06, 0, 1),  // Both capture & streaming
+  MOD_SFPIPE_DEPTH_P2A,
+  MOD_SFPIPE_DEPTH_FEFM,
+  MOD_SFPIPE_DEPTH_N3D,
+  MOD_SFPIPE_DEPTH_WPE,
+  MOD_SFPIPE_DEPTH_DPE,
+  MOD_SFPIPE_DEPTH_DLDEPTH,
+  MOD_SFPIPE_DEPTH_GF,
+  MOD_SFPIPE_DEPTH_GFAF,
+  MOD_SFPIPE_DEPTH_SLANT,
+
+  // -- Library & algorithm adapters
+  _MOD_BASIC_LIBRARY_BEGIN = MODULE_ID(0x080, 0x01, 0, 0),
+  MOD_PD_HAL,
+  MOD_LMV_HAL,
+  MOD_VHDR_HAL,
+  MOD_CHDR_HAL,
+  MOD_FD_HAL,
+  MOD_ASD_HAL,
+  MOD_FD_ADAPTER,
+  _MOD_CAPTURE_LIBRARY_BEGIN = MODULE_ID(0x080, 0x02, 0, 0),
+  MOD_LIB_MFNR,
+  MOD_LIB_AINR,
+  MOD_LIB_SWNR,
+  MOD_LIB_HDR,
+  MOD_LIB_ZSDHDR,
+  MOD_LIB_DEPTH,
+  MOD_LIB_BOKEH,
+  MOD_LIB_FUSION,
+  MOD_LIB_PUREBOKEH,
+  MOD_ABF_ADAPT,
+  MOD_LIB_FB,
+  MOD_LIB_MSNR,
+  MOD_LIB_REMO,
+  MOD_LIB_CSHOT,
+  _MOD_STREAMING_LIBRARY_BEGIN = MODULE_ID(0x080, 0x04, 0, 0),
+  MOD_EIS_HAL,
+  MOD_3DNR_HAL,
+  MOD_FSC_HAL,
+  MOD_RSS_HAL,
+  MOD_FWMVP,
+  MOD_VAINR_HAL,
+  MOD_HDR10,
+  _MOD_FEATURE_LIB_BEGIN = MODULE_ID(0x080, 0x06, 0, 0),
+  MOD_VSDOF_HAL,
+  MOD_VENDOR_LIB_COMMON = MODULE_ID(0x080, 0x80, 0, 1),
+
+  // -- Algorithm
+  _MOD_ALGORITHM = MODULE_ID(0x100, 0x01, 0, 0),
+
+  // -- Driver
+  MOD_DRV_NORMAL_PIPE = MODULE_ID(0x200, 0x01, 0, 1),
+  MOD_DRV_SENSOR,
+  MOD_DRV_CAMCAL,
+  MOD_DRV_DIP = MODULE_ID(0x200, 0x06, 0, 1),
+  MOD_DRV_RSC,
+  MOD_DRV_FD,
+  MOD_DRV_DPE,
+  MOD_DRV_WPE,
+  MOD_DRV_OWE,
+  MOD_DRV_MFB,
+  MOD_DRV_MSS,
+  MOD_DRV_MSF,
+  MOD_DRV_LPCNR,
+  MOD_DRV_COMMON = MODULE_ID(0x200, 0x07, 0, 1),
+  MOD_IOPIPE_EVENT = MODULE_ID(0x200, 0x10, 0, 1),
+
+  // -- Cross-layer utilities
+  MOD_UTILITY = MODULE_ID(0x400, 0x07, 0, 1),  // Shared for all SMALL utilities
+  MOD_IMAGE_BUFFER,
+  MOD_METADATA,
+  MOD_MULTICAM_PROVIDER,
+  MOD_MODULE_REGISTRY,
+  MOD_SIMAGER,
+  MOD_ISP_PROFILE_MAPPER,
+  MOD_MTK_FEATURE_MAPPER,
+  MOD_EXIF,
+  MOD_CA,
+  MOD_TUNING_UTILS,
+  MOD_CAMERA_AUTO_TEST_LOGGER,
+  MOD_UNIFIED_LOG = MODULE_ID(0x400, 0x87, 0, 1),
+  MOD_END
+};
+
+enum RequestTypeId {
+  /*
+   * NOTE: You MUST also fill the RequestType name in ULogTable.cpp
+   */
+  REQ_INVALID_ID = 0,
+  REQ_APP_REQUEST,
+  REQ_ISP_REQUEST,
+  REQ_PIPELINE_FRAME,
+  REQ_P2_CAP_REQUEST,
+  REQ_P2_STR_REQUEST,
+  REQ_CAP_FPIPE_REQUEST,
+  REQ_STR_FPIPE_REQUEST,
+  REQ_DEPTH_REQUEST,
+  REQ_QBUF_INFO,
+  REQ_QPARAMS,
+
+  REQUEST_TYPE_END
+};
+}  // namespace ULog
+}  // namespace Utils
+}  // namespace NSCam
+
+#endif  // INCLUDE_MTKCAM_INTERFACES_UTILS_STD_ULOGDEF_H_

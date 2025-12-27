@@ -1,0 +1,22 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/erofs-utils
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "erofs-utils"
+description: "EROFS Utilities"
+third_party {
+  license_type: RESTRICTED
+  security {
+    tag: "NVD-CPE2.3:cpe:/a:erofs-utils_project:erofs-utils:1.8.3"
+  }
+  last_upgrade_date {
+    year: 2024
+    month: 12
+    day: 18
+  }
+  identifier {
+    type: "Git"
+    value: "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git"
+    version: "v1.8.3"
+  }
+}

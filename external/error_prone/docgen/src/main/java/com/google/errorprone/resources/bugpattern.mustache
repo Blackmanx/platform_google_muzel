@@ -1,0 +1,39 @@
+{{#frontmatter}}
+{{{frontmatter}}}
+{{/frontmatter}}
+<!--
+*** AUTO-GENERATED, DO NOT MODIFY ***
+To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
+-->
+
+{{^frontmatter}}
+# {{name}}
+{{#baseUrl}}
+
+{{baseUrl}}/{{name}}
+
+{{/baseUrl}}
+
+__{{summary}}__
+
+<div style="float:right;"><table id="metadata">
+<tr><td>Severity</td><td>{{severity}}</td></tr>
+{{#tags}}
+<tr><td>Tags</td><td>{{tags}}</td></tr>
+{{/tags}}
+</table></div>
+
+{{/frontmatter}}
+{{#altNames}}
+_Alternate names: {{altNames}}_
+{{/altNames}}
+
+{{#explanation}}
+## The problem
+{{{explanation}}}
+{{/explanation}}
+
+{{#suppression}}
+## Suppression
+{{{suppression}}}
+{{/suppression}}

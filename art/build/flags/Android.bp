@@ -1,0 +1,136 @@
+//
+// Copyright (C) 2024 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package {
+    default_applicable_licenses: ["art_license"],
+    default_visibility: [
+        "//art:__subpackages__",
+        "//libcore:__subpackages__",
+    ],
+}
+
+aconfig_declarations {
+    name: "art-aconfig-flags",
+    package: "com.android.art.flags",
+    container: "com.android.art",
+    exportable: true,
+    srcs: ["art-flags.aconfig"],
+    visibility: [
+        "//art:__subpackages__",
+        "//libcore:__subpackages__",
+        "//frameworks/base:__subpackages__",
+        "//packages/modules/UprobeStats:__subpackages__",
+    ],
+}
+
+// TODO: Remove this temporary measure of an extra .aconfig file for C++ only.
+//   When b/422986526 is implemented, or no exported flag from art-flags.aconfig is used in libcore,
+//     and all flags in art-rw-flags.aconfig are fully launched, we can
+//     1) make "libcore-aconfig-flags-lib" into "force-read-only" mode,
+//     2) remove this aconfig_declarations and aconfig file,
+//     3) put all new read-write flags into art-flags.aconfig, and
+//     4) put all new exported flags into libcore.aconfig.
+aconfig_declarations {
+    name: "art-aconfig-rw-flags",
+    package: "com.android.art.rw.flags",
+    container: "com.android.art",
+    exportable: false,
+    srcs: ["art-rw-flags.aconfig"],
+}
+
+cc_aconfig_library {
+    name: "art-aconfig-flags-lib",
+    aconfig_declarations: "art-aconfig-flags",
+    host_supported: true,
+    min_sdk_version: "31",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}
+
+cc_aconfig_library {
+    name: "art-aconfig-rw-flags-lib",
+    aconfig_declarations: "art-aconfig-rw-flags",
+    host_supported: true,
+    min_sdk_version: "31",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}
+
+java_aconfig_library {
+    name: "art-aconfig-flags-java-lib",
+    aconfig_declarations: "art-aconfig-flags",
+    min_sdk_version: "31", // ART module is enabled on Android 12 or above.
+    sdk_version: "none",
+    patch_module: "java.base",
+    system_modules: "core-all-system-modules",
+    libs: ["framework-api-annotations-lib"],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    visibility: [
+        "//art:__subpackages__",
+        "//cts/tests/tests/uprobestats:__subpackages__",
+        "//cts/tests/libcore/vmdebug:__subpackages__",
+        "//libcore:__subpackages__",
+    ],
+}
+
+java_aconfig_library {
+    name: "art-aconfig-rw-flags-java-lib",
+    aconfig_declarations: "art-aconfig-rw-flags",
+    min_sdk_version: "31", // ART module is enabled on Android 12 or above.
+    sdk_version: "none",
+    patch_module: "java.base",
+    system_modules: "core-all-system-modules",
+    libs: [
+        "fake_device_config",
+        "framework-api-annotations-lib",
+    ],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    visibility: [
+        "//art:__subpackages__",
+        "//cts/tests/tests/security",
+        "//cts/tests/tests/uprobestats:__subpackages__",
+    ],
+}
+
+java_aconfig_library {
+    name: "art-aconfig-flags-java-lib-host",
+    host_supported: true,
+    device_supported: false,
+    aconfig_declarations: "art-aconfig-flags",
+    visibility: [
+        "//cts/hostsidetests/compilation:__subpackages__",
+    ],
+}
+
+java_aconfig_library {
+    name: "art-aconfig-rw-flags-java-lib-test",
+    host_supported: true,
+    mode: "test",
+    aconfig_declarations: "art-aconfig-rw-flags",
+    visibility: [
+        "//packages/modules/UprobeStats:__subpackages__",
+    ],
+}

@@ -1,0 +1,2 @@
+Calls a method with const-method-type instructions which will be JIT-ed from a class soon to be
+garbage collected.

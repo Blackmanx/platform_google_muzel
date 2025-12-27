@@ -1,0 +1,65 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+config SOC_QUALCOMM_X1P42100
+	bool
+	default n
+	select ARCH_BOOTBLOCK_ARMV8_64
+	select ARCH_RAMSTAGE_ARMV8_64
+	select ARCH_ROMSTAGE_ARMV8_64
+	select ARCH_VERSTAGE_ARMV8_64
+	select ARM64_USE_ARCH_TIMER
+	select ARM64_USE_ARM_TRUSTED_FIRMWARE
+	select CACHE_MRC_SETTINGS
+	select COMMONLIB_STORAGE
+	select COMMONLIB_STORAGE_SD
+	select COMPRESS_BOOTBLOCK
+	select FIXED_UART_FOR_CONSOLE
+	select GENERIC_GPIO_LIB
+	select GENERIC_UDELAY
+	select HAS_RECOVERY_MRC_CACHE
+	select HAVE_LINEAR_FRAMEBUFFER
+	select HAVE_MONOTONIC_TIMER
+	select HAVE_UART_SPECIAL
+	select MAINBOARD_FORCE_NATIVE_VGA_INIT
+	select MAINBOARD_HAS_NATIVE_VGA_INIT
+	select PCI
+	select QC_COMMON_QUPV3_2
+	select QMP_PHY_2X2_1X4
+	select NO_ECAM_MMCONF_SUPPORT
+	select SDHCI_CONTROLLER
+	select SOC_QUALCOMM_COMMON
+
+if SOC_QUALCOMM_X1P42100
+
+config QC_BLOBS_UPSTREAM
+	bool "QC blobs are available in upstream repository"
+	select USE_QC_BLOBS
+	default n
+	help
+	  Select based on availability of QC blobs in upstream coreboot `3rdparty/qc_blobs`.
+
+config MEMLAYOUT_LD_FILE
+	string
+	default "src/soc/qualcomm/x1p42100/memlayout.ld"
+
+config VBOOT
+	select VBOOT_MUST_REQUEST_DISPLAY
+	select VBOOT_RETURN_FROM_VERSTAGE
+	select VBOOT_SEPARATE_VERSTAGE
+	select VBOOT_STARTS_IN_BOOTBLOCK
+
+config BOOT_DEVICE_SPI_FLASH_BUS
+	int
+	default 24
+
+config UART_FOR_CONSOLE
+	int
+	default 21
+	help
+	 Select the QUP instance to be used for UART console output.
+
+config UART_BITBANG_TX_DELAY_MS
+	int
+	default 1
+
+endif

@@ -1,0 +1,24 @@
+package: "android.app.ondeviceintelligence.flags"
+container: "system"
+
+flag {
+    name: "enable_on_device_intelligence"
+    is_exported: true
+    namespace: "ondeviceintelligence"
+    description: "Make methods on OnDeviceIntelligenceManager available for local inference."
+    bug: "304755128"
+}
+flag {
+    name: "enable_on_device_intelligence_module"
+    is_exported: true
+    namespace: "ondeviceintelligence"
+    description: "Enable migration to mainline module and related changes."
+    bug: "376427781"
+}
+flag {
+    name: "on_device_intelligence_25q4"
+    is_exported: true
+    namespace: "ondeviceintelligence"
+    description: "Add improvements to on device intelligence APIs."
+    bug: "372658837"
+}

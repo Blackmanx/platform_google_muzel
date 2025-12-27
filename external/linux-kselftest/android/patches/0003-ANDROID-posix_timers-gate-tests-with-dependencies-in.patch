@@ -1,0 +1,84 @@
+From 080fddf18dab35ab2130a51736c5d66ce0227f16 Mon Sep 17 00:00:00 2001
+From: Wake Liu <wakel@google.com>
+Date: Thu, 24 Jul 2025 20:11:20 +0800
+Subject: [PATCH] ANDROID: posix_timers: gate tests with dependencies in /proc
+
+Some posix_timers tests were added in 6.13 that depend on fixes for
+timer behavior after SIG_IGN.  Skip these tests for backwards
+compatibility with older kernels.
+
+Original-Bug: 392179640
+Bug: 422759683
+Test: atest vts_linux_kselftest_x86_64:timers_posix_timers_x86_64
+Link: https://lore.kernel.org/all/20250807085042.1690931-1-wakel@google.com/
+Signed-off-by: Edward Liaw <edliaw@google.com>
+Signed-off-by: Wake Liu <wakel@google.com>
+
+Change-Id: I60c464c797c56519ac8ebb6341629a8757b6a4dd
+---
+ tools/testing/selftests/timers/posix_timers.c | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/tools/testing/selftests/timers/posix_timers.c b/tools/testing/selftests/timers/posix_timers.c
+index f0eceb0faf34f..e339d356e67b9 100644
+--- a/tools/testing/selftests/timers/posix_timers.c
++++ b/tools/testing/selftests/timers/posix_timers.c
+@@ -256,6 +256,11 @@ static void *ignore_thread(void *arg)
+ 
+ static void check_sig_ign(int thread)
+ {
++	if (!ksft_min_kernel_version(6, 13)) {
++		// see caf77435dd8a "signal: Handle ignored signals in do_sigaction(action != SIG_IGN)"
++		ksft_test_result_skip("Depends on refactor of posix timers in 6.13\n");
++		return;
++	}
+ 	struct tmrsig tsig = { };
+ 	struct itimerspec its;
+ 	unsigned int tid = 0;
+@@ -342,6 +347,10 @@ static void check_sig_ign(int thread)
+ 
+ static void check_rearm(void)
+ {
++	if (!ksft_min_kernel_version(6, 13)) {
++		ksft_test_result_skip("Depends on refactor of posix timers in 6.13\n");
++		return;
++	}
+ 	struct tmrsig tsig = { };
+ 	struct itimerspec its;
+ 	struct sigaction sa;
+@@ -398,6 +407,10 @@ static void check_rearm(void)
+ 
+ static void check_delete(void)
+ {
++	if (!ksft_min_kernel_version(6, 13)) {
++		ksft_test_result_skip("Depends on refactor of posix timers in 6.13\n");
++		return;
++	}
+ 	struct tmrsig tsig = { };
+ 	struct itimerspec its;
+ 	struct sigaction sa;
+@@ -455,6 +468,10 @@ static inline int64_t calcdiff_ns(struct timespec t1, struct timespec t2)
+ 
+ static void check_sigev_none(int which, const char *name)
+ {
++	if (!ksft_min_kernel_version(6, 13)) {
++		ksft_test_result_skip("Depends on refactor of posix timers in 6.13\n");
++		return;
++	}
+ 	struct timespec start, now;
+ 	struct itimerspec its;
+ 	struct sigevent sev;
+@@ -493,6 +510,10 @@ static void check_sigev_none(int which, const char *name)
+ 
+ static void check_gettime(int which, const char *name)
+ {
++	if (!ksft_min_kernel_version(6, 13)) {
++		ksft_test_result_skip("Depends on refactor of posix timers in 6.13\n");
++		return;
++	}
+ 	struct itimerspec its, prev;
+ 	struct timespec start, now;
+ 	struct sigevent sev;
+-- 
+2.50.1.703.g449372360f-goog
+

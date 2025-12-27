@@ -1,0 +1,5 @@
+[cfi]
+
+[integer]
+# Intentional overflows in multiple hash functions
+src:*/lib/hash.c

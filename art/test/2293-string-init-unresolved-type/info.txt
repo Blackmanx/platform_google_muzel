@@ -1,0 +1,2 @@
+Test that we don't crash the compiler when
+initializing an unresolved class as a String.

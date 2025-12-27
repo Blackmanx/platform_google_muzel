@@ -1,0 +1,7 @@
+# We need callInstance to be AOT compiled. The AOT compiled code used to wrongly assume
+# the CallStatic class was loaded.
+HSLTest;->callInstance()I
+
+# We need CallStatic to be in the profile to make the compiler think it will be part of
+# the image.
+LCallStatic;

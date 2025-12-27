@@ -1,0 +1,1 @@
+Regression test for the fast compiler and the handling of try/catch.

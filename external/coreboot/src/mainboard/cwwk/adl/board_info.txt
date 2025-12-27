@@ -1,0 +1,6 @@
+Vendor name: CWWK
+Category: eval
+ROM package: SOIC-8
+ROM protocol: SPI
+ROM socketed: n
+Flashrom support: y

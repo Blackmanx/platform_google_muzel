@@ -1,0 +1,7 @@
+{
+    "presubmit": [
+        {
+            "name": "kernelWakelockDuration_test"
+        }
+    ]
+}

@@ -1,0 +1,21 @@
+JNI_OnLoad called
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded
+doWork()
+ClassLoader was unloaded

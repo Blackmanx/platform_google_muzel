@@ -1,0 +1,20 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/libkmsxx
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "kms++"
+description: "libkmsxx is a small C++11 library for kernel mode setting. It tries to implement as little extra as possible while bringing the kms API in a C++ form to the user. It only implements a subset of what libdrm supports."
+third_party {
+  license_type: RECIPROCAL
+  last_upgrade_date {
+    year: 2025
+    month: 1
+    day: 17
+  }
+  homepage: "https://github.com/tomba/kmsxx"
+  identifier {
+    type: "Git"
+    value: "https://github.com/tomba/kmsxx"
+    version: "aaab406251540429522c5ef7808ee049c65a06d2"
+  }
+}

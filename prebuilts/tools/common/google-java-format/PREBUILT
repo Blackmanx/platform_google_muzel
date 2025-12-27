@@ -1,0 +1,15 @@
+This folder contains prebuilt JARs from the google-java-format project:
+
+https://github.com/google/google-java-format
+
+Binaries and source may be obtained at:
+
+https://github.com/google/google-java-format/releases
+
+or for snapshots:
+
+https://oss.sonatype.org/content/repositories/snapshots/com/google/googlejavaformat/google-java-format/
+
+Artifacts fetched at SHA-1:
+5c38c33b91669684e9ef0f3e889fdd6c3b09ade4
+with tag v1.27.0

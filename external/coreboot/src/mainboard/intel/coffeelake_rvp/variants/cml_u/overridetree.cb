@@ -1,0 +1,86 @@
+chip soc/intel/cannonlake
+
+	# Enable eDP device
+	register "DdiPortEdp" = "1"
+	# Enable HPD for DDI ports B/C
+	register "DdiPortBHpd" = "1"
+	register "DdiPortCHpd" = "1"
+	register "DdiPortDHpd" = "1"
+	register "DdiPortFHpd" = "1"
+	# Enable DDC for DDI ports B/C
+	register "DdiPortBDdc" = "1"
+	register "DdiPortCDdc" = "1"
+	register "DdiPortDDdc" = "1"
+	register "DdiPortFDdc" = "1"
+
+	register "SerialIoDevMode" = "{
+		[PchSerialIoIndexI2C0]  = PchSerialIoPci,
+		[PchSerialIoIndexI2C1]  = PchSerialIoPci,
+		[PchSerialIoIndexI2C2]  = PchSerialIoPci,
+		[PchSerialIoIndexI2C3]  = PchSerialIoPci,
+		[PchSerialIoIndexI2C4]  = PchSerialIoDisabled,
+		[PchSerialIoIndexI2C5]  = PchSerialIoPci,
+		[PchSerialIoIndexSPI0] = PchSerialIoPci,
+		[PchSerialIoIndexSPI1] = PchSerialIoPci,
+		[PchSerialIoIndexSPI2] = PchSerialIoDisabled,
+		[PchSerialIoIndexUART0] = PchSerialIoSkipInit,
+		[PchSerialIoIndexUART1] = PchSerialIoDisabled,
+		[PchSerialIoIndexUART2] = PchSerialIoSkipInit,
+	}"
+
+	register "SataSalpSupport" = "1"
+	register "SataPortsEnable[0]" = "1"
+	register "SataPortsEnable[1]" = "1"
+	register "SataPortsEnable[2]" = "1"
+	register "SataPortsEnable[3]" = "1"
+	register "SataPortsEnable[4]" = "1"
+	register "SataPortsEnable[5]" = "1"
+	register "SataPortsEnable[6]" = "1"
+	register "SataPortsEnable[7]" = "1"
+
+	register "PchHdaDspEnable" = "true"
+	register "PchHdaAudioLinkHda" = "1"
+
+	register "PcieClkSrcUsage[0]" = "1"
+	register "PcieClkSrcUsage[1]" = "8"
+	register "PcieClkSrcUsage[2]" = "PCIE_CLK_LAN"
+	register "PcieClkSrcUsage[3]" = "13"
+	register "PcieClkSrcUsage[4]" = "4"
+	register "PcieClkSrcUsage[5]" = "14"
+
+	register "PcieClkSrcClkReq[0]" = "0"
+	register "PcieClkSrcClkReq[1]" = "1"
+	register "PcieClkSrcClkReq[2]" = "2"
+	register "PcieClkSrcClkReq[3]" = "3"
+	register "PcieClkSrcClkReq[4]" = "4"
+	register "PcieClkSrcClkReq[5]" = "5"
+
+	# GPIO for SD card detect
+	register "sdcard_cd_gpio" = "GPP_G5"
+
+	device domain 0 on
+		device ref cnvi_wifi on
+			chip drivers/wifi/generic
+				register "wake" = "PME_B0_EN_BIT"
+				device generic 0 on end
+			end
+		end
+		device ref sdxc on  end
+		device ref i2c0 on  end
+		device ref i2c1 on  end
+		device ref sata on  end
+		device ref i2c4 on  end
+		device ref uart2 on  end
+		device ref emmc on  end
+		device ref pcie_rp1 on	# x4 SLOT1
+			register "PcieRpSlotImplemented[0]" = "true"
+		end
+		device ref pcie_rp5 on	# x1 SLOT2/LAN
+			register "PcieRpSlotImplemented[4]" = "true"
+		end
+		device ref pcie_rp9 on
+			register "PcieRpSlotImplemented[8]" = "true"
+		end
+		device ref gbe on  end
+	end
+end

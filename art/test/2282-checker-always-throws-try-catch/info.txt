@@ -1,0 +1,2 @@
+Tests we don't mark an always throwing method with a try/catch. Otherwise,
+we might incorrectly mark other methods as "always throws" methods.

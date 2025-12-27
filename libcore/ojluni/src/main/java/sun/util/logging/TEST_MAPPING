@@ -1,0 +1,7 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_sun_util_logging"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+From 8003d4554fddde34f198d627f1167fa4f1f58c78 Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Fri, 28 Mar 2025 16:29:07 -0600
+Subject: [PATCH] Fix macro-redefined compiler error
+
+Change-Id: Idf5405c96da7bf71b8e946cc6589a6a919c369b0
+---
+ src/filter.c  | 22 +++++++++++-----------
+ src/libprtX.h | 24 ++++++++++++------------
+ src/wrapper.c |  2 +-
+ 3 files changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/src/filter.c b/src/filter.c
+index deceb2b..8d89f38 100644
+--- a/src/filter.c
++++ b/src/filter.c
+@@ -277,8 +277,8 @@ main (int argc, char *argv[])
+ 	memset (&printOpt, 0, sizeof (EPS_OPT));
+ 	memset (&bandBmp, 0, sizeof(EPS_BANDBMP));
+ 
+-	strncpy (fopt.model, argv[1], NAME_MAX);
+-	for (i = 0; i < NAME_MAX - 1 && fopt.model[i] != '\0' ; i ++)
++	strncpy (fopt.model, argv[1], EPSON_NAME_MAX);
++	for (i = 0; i < EPSON_NAME_MAX - 1 && fopt.model[i] != '\0' ; i ++)
+ 		fopt.model_low[i] = tolower (fopt.model[i]);
+ 	fopt.model_low[i] = '\0';
+ 
+@@ -286,15 +286,15 @@ main (int argc, char *argv[])
+ 	height_pixel = atol (argv[3]);
+ 	HWResolution = atol (argv[4]);
+ 
+-	strncpy (fopt.ink, argv[5], NAME_MAX);
+-	strncpy (fopt.media, argv[6], NAME_MAX);
+-	strncpy (fopt.quality, argv[7], NAME_MAX);
+-	strncpy (fopt.duplex, argv[8], NAME_MAX);
+-	strncpy (fopt.inputslot, argv[9], NAME_MAX);
+-	strncpy (fopt.brightness, argv[10], NAME_MAX);
+-	strncpy (fopt.contrast, argv[11], NAME_MAX);
+-	strncpy (fopt.saturation, argv[12], NAME_MAX);
+-	strncpy (fopt.quietmode, argv[13], NAME_MAX);
++	strncpy (fopt.ink, argv[5], EPSON_NAME_MAX);
++	strncpy (fopt.media, argv[6], EPSON_NAME_MAX);
++	strncpy (fopt.quality, argv[7], EPSON_NAME_MAX);
++	strncpy (fopt.duplex, argv[8], EPSON_NAME_MAX);
++	strncpy (fopt.inputslot, argv[9], EPSON_NAME_MAX);
++	strncpy (fopt.brightness, argv[10], EPSON_NAME_MAX);
++	strncpy (fopt.contrast, argv[11], EPSON_NAME_MAX);
++	strncpy (fopt.saturation, argv[12], EPSON_NAME_MAX);
++	strncpy (fopt.quietmode, argv[13], EPSON_NAME_MAX);
+ 	
+ 	debug_msg("all para\n");
+ 	for(i = 0; i< argc; i++){
+diff --git a/src/libprtX.h b/src/libprtX.h
+index 3c8b529..6854034 100644
+--- a/src/libprtX.h
++++ b/src/libprtX.h
+@@ -24,7 +24,7 @@
+ #  include <config.h>
+ #endif
+ 
+-#define NAME_MAX 41
++#define EPSON_NAME_MAX 41
+ 
+ #include "pipsDef.h"
+ #include "../lib/epson-escpr-pvt.h"
+@@ -43,17 +43,17 @@ typedef struct tagEPS_OPT{
+ }EPS_OPT;
+ 
+ typedef struct rtp_filter_option {
+-	char model[NAME_MAX + 1];
+-	char model_low[NAME_MAX + 1];
+-	char ink[NAME_MAX + 1];
+-	char media[NAME_MAX + 1];
+-	char quality[NAME_MAX + 1];
+-	char duplex[NAME_MAX + 1];
+-	char inputslot[NAME_MAX + 1];
+-	char brightness[NAME_MAX + 1];
+-	char contrast[NAME_MAX + 1];
+-	char saturation[NAME_MAX + 1];
+-	char quietmode[NAME_MAX + 1];
++	char model[EPSON_NAME_MAX + 1];
++	char model_low[EPSON_NAME_MAX + 1];
++	char ink[EPSON_NAME_MAX + 1];
++	char media[EPSON_NAME_MAX + 1];
++	char quality[EPSON_NAME_MAX + 1];
++	char duplex[EPSON_NAME_MAX + 1];
++	char inputslot[EPSON_NAME_MAX + 1];
++	char brightness[EPSON_NAME_MAX + 1];
++	char contrast[EPSON_NAME_MAX + 1];
++	char saturation[EPSON_NAME_MAX + 1];
++	char quietmode[EPSON_NAME_MAX + 1];
+ 	double custom_width_min;
+ 	double custom_width_max;
+ 	double custom_height_min;
+diff --git a/src/wrapper.c b/src/wrapper.c
+index 906dc50..b037e97 100644
+--- a/src/wrapper.c
++++ b/src/wrapper.c
+@@ -446,7 +446,7 @@ get_option_for_ppd (const char *printer, filter_option_t *filter_opt_p)
+ 
+ 	/* Make library file name */
+ 	strcpy (filter_opt_p->model, ppd_p->modelname);
+-	for (i = 0; i < NAME_MAX && filter_opt_p->model[i] != '\0' ; i ++)
++	for (i = 0; i < EPSON_NAME_MAX && filter_opt_p->model[i] != '\0' ; i ++)
+ 		filter_opt_p->model_low[i] = tolower (filter_opt_p->model[i]);
+ 	filter_opt_p->model_low[i] = '\0';
+ 
+-- 
+2.49.0.472.ge94155a9ec-goog
+

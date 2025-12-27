@@ -1,0 +1,1 @@
+Smali test that we don't crash the compiler when encountering an invalid RTI.

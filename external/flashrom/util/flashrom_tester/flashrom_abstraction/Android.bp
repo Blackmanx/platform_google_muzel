@@ -1,0 +1,43 @@
+package {
+    default_applicable_licenses: ["external_flashrom_license"],
+    default_team: "trendy_team_desktop_manufacturing_and_serviceability",
+}
+
+rust_defaults {
+    name: "flashrom_abstraction_defaults",
+    edition: "2021",
+    rustlibs: [
+        "liblibflashrom",
+        "liblog_rust",
+    ],
+}
+
+rust_test {
+    name: "flashrom_abstraction_test_src_lib",
+    host_supported: true,
+    crate_name: "flashrom_abstraction",
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.0.0",
+    crate_root: "src/lib.rs",
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    test_options: {
+        unit_test: true,
+    },
+    defaults: ["flashrom_abstraction_defaults"],
+}
+
+rust_library {
+    name: "libflashrom_abstraction",
+    host_supported: true,
+    crate_name: "flashrom_abstraction",
+    cargo_env_compat: true,
+    cargo_pkg_version: "1.0.0",
+    crate_root: "src/lib.rs",
+    vendor_available: true,
+    defaults: ["flashrom_abstraction_defaults"],
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+}

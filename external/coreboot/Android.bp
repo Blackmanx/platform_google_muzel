@@ -1,0 +1,194 @@
+package {
+    default_applicable_licenses: ["external_coreboot_license"],
+}
+
+license {
+    name: "external_coreboot_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD-2-Clause",
+        "SPDX-license-identifier-BSD-2-Clause-Patent",
+        "SPDX-license-identifier-BSD-3-Clause",
+        "SPDX-license-identifier-BSD-4-Clause-UC",
+        "SPDX-license-identifier-CC-BY-4.0",
+        "SPDX-license-identifier-CC-BY-SA-3.0",
+        "SPDX-license-identifier-GPL-2.0-only",
+        "SPDX-license-identifier-GPL-2.0-or-later",
+        "SPDX-license-identifier-GPL-3.0-only",
+        "SPDX-license-identifier-GPL-3.0-or-later",
+        "SPDX-license-identifier-HPND",
+        "SPDX-license-identifier-ISC",
+        "SPDX-license-identifier-LGPL-2.1-or-later",
+        "SPDX-license-identifier-MIT",
+    ],
+    license_text: [
+        "COPYING",
+        "LICENSE",
+    ],
+}
+
+cc_defaults {
+    name: "coreboot-tools-defaults",
+    visibility: ["//visibility:private"],
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+        "-Wshadow",
+        "-Wcast-qual",
+        "-Wmissing-prototypes",
+        "-Wredundant-decls",
+        "-Wstrict-prototypes",
+        "-Wwrite-strings",
+
+        "-Wno-unused-parameter",
+        "-Wno-address-of-packed-member",
+        "-Wno-enum-conversion",
+        "-Wno-missing-braces",
+        "-Wno-error=gnu-pointer-arith",
+
+        "-Wno-sign-compare",
+        "-Wno-cast-qual",
+
+        /* TODO(b/436814456): Remove these warning options once clang supports __nonstring__ */
+        "-Wno-error=unknown-attributes",
+
+        "-D_DEFAULT_SOURCE",
+        "-D_GNU_SOURCE",
+
+        "-include src/commonlib/bsd/include/commonlib/bsd/compiler.h",
+    ],
+
+    local_include_dirs: [
+        "util/cbfstool/flashmap",
+        "util/cbfstool",
+        "src/commonlib/include",
+        "src/commonlib/bsd/include",
+        "src",
+        "src/vendorcode/intel/edk2/uefi_2.4/MdePkg/Include",
+    ],
+}
+
+cc_defaults {
+    name: "coreboot-tools-with-vboot-defaults",
+    defaults: ["coreboot-tools-defaults"],
+    include_dirs: ["external/vboot_reference/host/lib/include"],
+    static_libs: ["libvboot_host"],
+}
+
+genrule {
+    name: "fmd_shipped_headers",
+    srcs: [
+        "util/cbfstool/fmd_scanner.h_shipped",
+        "util/cbfstool/fmd_parser.h_shipped",
+    ],
+    cmd: "for f in $(in); do b=$$(basename $$f); cp $$f $(genDir)/$${b%_shipped}; done",
+    out: [
+        "fmd_scanner.h",
+        "fmd_parser.h",
+    ],
+}
+
+genrule {
+    name: "fmd_shipped_sources",
+    srcs: [
+        "util/cbfstool/fmd_scanner.c_shipped",
+        "util/cbfstool/fmd_parser.c_shipped",
+    ],
+    cmd: "for f in $(in); do b=$$(basename $$f); cp $$f $(genDir)/$${b%_shipped}; done",
+    out: [
+        "fmd_scanner.c",
+        "fmd_parser.c",
+    ],
+}
+
+cc_binary {
+    name: "cbfstool",
+    defaults: ["coreboot-tools-with-vboot-defaults"],
+    host_supported: true,
+    vendor: true,
+    cflags: [
+        "-Wno-error=missing-prototypes",
+        "-Wno-error=strict-prototypes",
+    ],
+    srcs: [
+        "util/cbfstool/cbfstool.c",
+        "util/cbfstool/common.c",
+        "util/cbfstool/cbfs_image.c",
+        "util/cbfstool/cbfs-mkstage.c",
+        "util/cbfstool/cbfs-mkpayload.c",
+        "util/cbfstool/elfheaders.c",
+        "util/cbfstool/rmodule.c",
+        "util/cbfstool/xdr.c",
+        "util/cbfstool/partitioned_file.c",
+        "util/cbfstool/platform_fixups.c",
+
+        "src/commonlib/bsd/cbfs_private.c",
+        "src/commonlib/fsp_relocate.c",
+
+        "util/cbfstool/flashmap/fmap.c",
+        "util/cbfstool/flashmap/kv_pair.c",
+        "util/cbfstool/flashmap/valstr.c",
+
+        "util/cbfstool/linux_trampoline.c",
+        "util/cbfstool/cbfs-payload-linux.c",
+
+        "util/cbfstool/compress.c",
+
+        "util/cbfstool/lz4/lib/lz4.c",
+        "util/cbfstool/lz4/lib/lz4hc.c",
+        "util/cbfstool/lz4/lib/lz4frame.c",
+        "util/cbfstool/lz4/lib/xxhash.c",
+        "src/commonlib/bsd/lz4_wrapper.c",
+
+        "util/cbfstool/lzma/lzma.c",
+        "util/cbfstool/lzma/C/LzFind.c",
+        "util/cbfstool/lzma/C/LzmaDec.c",
+        "util/cbfstool/lzma/C/LzmaEnc.c",
+    ],
+    generated_headers: ["fmd_shipped_headers"],
+}
+
+cc_binary {
+    name: "elogtool",
+    defaults: ["coreboot-tools-with-vboot-defaults"],
+    vendor: true,
+    srcs: [
+        "util/cbfstool/common.c",
+        "util/cbfstool/elogtool.c",
+        "util/cbfstool/eventlog.c",
+        "util/cbfstool/flashrom.c",
+        "util/cbfstool/flashmap/valstr.c",
+        "src/commonlib/bsd/elog.c",
+    ],
+}
+
+cc_binary {
+    name: "ifdtool",
+    defaults: ["coreboot-tools-defaults"],
+    vendor: true,
+    cflags: [
+        "-Wno-error=incompatible-pointer-types-discards-qualifiers",
+        "-Wno-error=shadow",
+    ],
+    srcs: [
+        "util/ifdtool/ifdtool.c",
+        "util/cbfstool/flashmap/fmap.c",
+        "util/cbfstool/flashmap/kv_pair.c",
+        "util/cbfstool/flashmap/valstr.c",
+    ],
+}
+
+cc_binary {
+    name: "cbmem",
+    defaults: ["coreboot-tools-defaults"],
+    vendor: true,
+    srcs: [
+        "util/cbmem/cbmem.c",
+	"util/cbmem/cbmem_drv.c",
+	"util/cbmem/devmem_drv.c",
+	"util/cbmem/sysfs_drv.c",
+        "src/commonlib/bsd/ipchksum.c",
+    ],
+}

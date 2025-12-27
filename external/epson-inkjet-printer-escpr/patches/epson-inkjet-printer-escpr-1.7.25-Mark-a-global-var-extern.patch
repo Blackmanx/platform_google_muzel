@@ -1,0 +1,29 @@
+From 5125c5a4cb17d9c0542b82e59338db3d52c1f7d6 Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Fri, 7 Feb 2025 11:51:21 -0700
+Subject: [PATCH] Mark a global var extern
+
+This is also declared in lib/epson-escpr-api.c, so when compiling there
+is an error about a duplicate symbol.  When this was compiled on
+ChromeOS, the symbol was marked common (the type was C, using nm tool)
+in each of the .o files.  However, I think this is a better solution.
+---
+ src/filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/filter.c b/src/filter.c
+index aac4d64..72bb712 100644
+--- a/src/filter.c
++++ b/src/filter.c
+@@ -68,7 +68,7 @@ extern EPS_UINT32   tmpLineBufSize;
+ extern EPS_UINT8*   tmpLineBuf;
+ 
+ extern EPS_CMN_FUNC epsCmnFnc;
+-EPS_JOB_FUNCS		jobFnc;
++extern EPS_JOB_FUNCS		jobFnc;
+ 
+ extern EPS_INT32 tonerSave;
+ extern EPS_INT32 back_type;
+-- 
+2.48.1.502.g6dc24dfdaf-goog
+

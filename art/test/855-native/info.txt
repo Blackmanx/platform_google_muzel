@@ -1,0 +1,2 @@
+Regression test for b/342077744: handle the case we may running generic JNI for
+a method but its entrypoint is a shared boot image JNI stub.

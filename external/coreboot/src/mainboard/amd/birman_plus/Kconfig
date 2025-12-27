@@ -1,0 +1,153 @@
+# SPDX-License-Identifier: GPL-2.0-only
+
+config BOARD_AMD_BIRMANPLUS_COMMON
+	def_bool n
+	select BOARD_ROMSIZE_KB_65536
+	select EC_ACPI
+	select SOC_AMD_COMMON_BLOCK_USE_ESPI if !SOC_AMD_COMMON_BLOCK_SIMNOW_BUILD
+	select DRIVERS_PCIE_RTD3_DEVICE
+	select DRIVERS_I2C_GENERIC
+	select MAINBOARD_HAS_CHROMEOS
+	select PCIEXP_ASPM
+	select PCIEXP_CLK_PM
+	select PCIEXP_COMMON_CLOCK
+	select PCIEXP_L1_SUB_STATE
+	select SOC_AMD_COMMON_BLOCK_ESPI_RETAIN_PORT80_EN if !SOC_AMD_COMMON_BLOCK_SIMNOW_BUILD
+	select SOC_AMD_COMMON_BLOCK_SIMNOW_SUPPORTED
+	select SPI_FLASH_EXIT_4_BYTE_ADDR_MODE
+
+
+config BOARD_AMD_BIRMANPLUS_PHOENIX
+	select BOARD_AMD_BIRMANPLUS_COMMON
+	select SOC_AMD_PHOENIX_FSP
+
+config BOARD_AMD_BIRMANPLUS_GLINDA
+	select BOARD_AMD_BIRMANPLUS_COMMON
+	select SOC_AMD_GLINDA
+
+if BOARD_AMD_BIRMANPLUS_COMMON
+
+config FMDFILE
+	default "src/mainboard/amd/birman_plus/chromeos_phoenix.fmd" if CHROMEOS && BOARD_AMD_BIRMANPLUS_PHOENIX
+	default "src/mainboard/amd/birman_plus/chromeos_glinda.fmd" if CHROMEOS && BOARD_AMD_BIRMANPLUS_GLINDA
+	default "src/mainboard/amd/birman_plus/board_phoenix.fmd" if BOARD_AMD_BIRMANPLUS_PHOENIX
+	default "src/mainboard/amd/birman_plus/board_glinda.fmd" if BOARD_AMD_BIRMANPLUS_GLINDA
+
+config MAINBOARD_DIR
+	default "amd/birman_plus" if BOARD_AMD_BIRMANPLUS_PHOENIX || BOARD_AMD_BIRMANPLUS_GLINDA
+
+config MAINBOARD_PART_NUMBER
+	default "Birmanplus_Phoenix" if BOARD_AMD_BIRMANPLUS_PHOENIX
+	default "Birmanplus_Glinda"  if BOARD_AMD_BIRMANPLUS_GLINDA
+
+config DEVICETREE
+	default "devicetree_phoenix.cb" if BOARD_AMD_BIRMANPLUS_PHOENIX
+	default "devicetree_glinda.cb"  if BOARD_AMD_BIRMANPLUS_GLINDA
+
+config BIRMANPLUS_HAVE_MCHP_FW
+	bool "Have Microchip EC firmware?"
+	default n
+
+config AMD_SOC_CONSOLE_UART
+	default y if !SOC_AMD_COMMON_BLOCK_SIMNOW_BUILD
+
+config BIRMANPLUS_MCHP_FW_FILE
+	string "Microchip EC firmware file"
+	depends on BIRMANPLUS_HAVE_MCHP_FW
+	default "3rdparty/blobs/mainboard/amd/birman_plus/EC_birmanplus.bin"
+	help
+	  The EC firmware blob is at the EC_BODY FMAP region of the firmware image.
+
+config VBOOT
+	select VBOOT_NO_BOARD_SUPPORT
+	select VBOOT_SEPARATE_VERSTAGE
+	select VBOOT_STARTS_IN_BOOTBLOCK
+
+config VBOOT_VBNV_OFFSET
+	hex
+	default 0x2A
+
+config RO_REGION_ONLY
+	string
+	depends on VBOOT_SLOTS_RW_AB || VBOOT_SLOTS_RW_A
+	# Add the EFS and EC to the RO region only
+	# This is a birmanplus specific override of soc/amd/(phoenix | glinda)/Kconfig
+	default "apu/amdfw apu/ecfw"
+
+config CHROMEOS
+	# Use default libpayload config
+	select LP_DEFCONFIG_OVERRIDE if PAYLOAD_DEPTHCHARGE
+	# We don't have recovery buttons, so we can't manually enable devmode.
+	select GBB_FLAG_FORCE_DEV_SWITCH_ON
+
+config ENABLE_EVAL_CARD
+	bool "Enable Eval Card"
+	help
+	  Enable the Eval Card PCIe slot
+
+config ENABLE_EVAL_19V
+	bool "Enable 19V rail for Eval Card"
+	depends on ENABLE_EVAL_CARD
+	help
+	  Enable the 19V rail for Eval Card PCIe slot
+
+config ENABLE_SSD1_BIRMANPLUS
+	bool "Enable M.2 SSD1 Slot"
+	help
+	  Enable M.2 SSD1 Slot. For Glinda SoC this will downgrade
+	  PCIe x8 slot to x4.
+
+choice
+	prompt "GBE Enable/WWAN LANE1 Selection"
+	default ENABLE_GBE_BIRMANPLUS
+	help
+	  When the M.2 x2 WWAN slot is enabled, the GbE LAN is disabled.
+
+config ENABLE_GBE_BIRMANPLUS
+	bool "Enable GBE (1 Lane WWAN)"
+
+config ENABLE_WWAN02_BIRMANPLUS
+	bool "Enable only WWAN (2 Lanes WWAN)"
+
+config DISABLE_WWAN_GBE_BIRMANPLUS
+	bool "Disable both WWAN and GBE"
+endchoice
+
+choice
+	prompt "SD Card Enable/WLAN LANE1 Selection"
+	default ENABLE_SDCARD_BIRMANPLUS
+	help
+	  When the M.2 x2 WLAN slot is enabled, the SD Card Reader is disabled.
+
+config ENABLE_SDCARD_BIRMANPLUS
+	bool "Enable SD Card (1 Lane WLAN)"
+
+config ENABLE_WLAN02_BIRMANPLUS
+	bool "Enable only WLAN (2 Lanes WLAN)"
+
+config DISABLE_WLAN_SD_BIRMANPLUS
+	bool "Disable both WLAN and SD Card"
+endchoice
+
+if !EM100	# EM100 defaults in soc/amd/common/blocks/spi/Kconfig
+config EFS_SPI_READ_MODE
+	default 3	# Quad IO (1-1-4)
+
+config EFS_SPI_SPEED
+	default 0	# 66MHz
+
+config EFS_SPI_MICRON_FLAG
+	default 0
+
+config NORMAL_READ_SPI_SPEED
+	default 1	# 33MHz
+
+config ALT_SPI_SPEED
+	default 1	# 33MHz
+
+config TPM_SPI_SPEED
+	default 1	# 33MHz
+
+endif # !EM100
+
+endif # BOARD_AMD_BIRMANPLUS_COMMON

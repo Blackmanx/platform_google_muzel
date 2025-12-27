@@ -1,0 +1,1 @@
+Smali test that makes sure we don't crash when two duplicate phis deviate

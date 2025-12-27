@@ -1,0 +1,12 @@
+LAppImageClass;
+LAppImageClassWithClinit;
+SHLMain;->$noinline$getAppImageClass()Ljava/lang/Class;
+SHLMain;->$noinline$getNonAppImageClass()Ljava/lang/Class;
+SHLMain;->$noinline$callAppImageClassNop()V
+SHLMain;->$noinline$callAppImageClassWithClinitNop()V
+SHLMain;->$noinline$callNonAppImageClassNop()V
+LSecondaryAppImageClass;
+LSecondaryClassWithUnmetDependency;
+SHLSecondary;->$noinline$getSecondaryAppImageClass()Ljava/lang/Class;
+SHLSecondary;->$noinline$getSecondaryNonAppImageClass()Ljava/lang/Class;
+SHLSecondary;->$noinline$getSecondaryClassWithUnmetDependency()Ljava/lang/Class;

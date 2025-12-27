@@ -1,0 +1,72 @@
+// Copyright 2024 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+phony {
+    name: "hyph-data",
+    required: [
+        "hyph-af",
+        "hyph-as",
+        "hyph-be",
+        "hyph-bg",
+        "hyph-bn",
+        "hyph-cs",
+        "hyph-cu",
+        "hyph-cy",
+        "hyph-da",
+        "hyph-de-1901",
+        "hyph-de-1996",
+        "hyph-de-ch-1901",
+        "hyph-el",
+        "hyph-en-gb",
+        "hyph-en-us",
+        "hyph-es",
+        "hyph-et",
+        "hyph-eu",
+        "hyph-fr",
+        "hyph-ga",
+        "hyph-gl",
+        "hyph-gu",
+        "hyph-hi",
+        "hyph-hr",
+        "hyph-hu",
+        "hyph-hy",
+        "hyph-it",
+        "hyph-ka",
+        "hyph-kn",
+        "hyph-la",
+        "hyph-lt",
+        "hyph-lv",
+        "hyph-ml",
+        "hyph-mn-cyrl",
+        "hyph-mr",
+        "hyph-mul-ethi",
+        "hyph-nb",
+        "hyph-nl",
+        "hyph-nn",
+        "hyph-or",
+        "hyph-pa",
+        "hyph-pl",
+        "hyph-pt",
+        "hyph-ru",
+        "hyph-sk",
+        "hyph-sl",
+        "hyph-sq",
+        "hyph-sv",
+        "hyph-ta",
+        "hyph-te",
+        "hyph-tk",
+        "hyph-uk",
+        "hyph-und-ethi",
+    ],
+}

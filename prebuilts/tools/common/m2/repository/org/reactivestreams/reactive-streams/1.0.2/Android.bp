@@ -1,0 +1,11 @@
+// TODO(b/326486994): remove this target once reactive-streams-jvm source is imported
+java_import_host {
+    name: "reactive-streams-1.0.2",
+    jars: ["reactive-streams-1.0.2.jar"],
+    visibility: ["//external/aws-sdk-java-v2:__subpackages__"],
+    target: {
+        windows: {
+            enabled: true,
+        },
+    },
+}

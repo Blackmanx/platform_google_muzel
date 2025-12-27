@@ -1,0 +1,20 @@
+# This project was upgraded with external_updater.
+# Usage: tools/external_updater/updater.sh update external/obstack
+# For more info, check https://cs.android.com/android/platform/superproject/main/+/main:tools/external_updater/README.md
+
+name: "obstack"
+description: "obstack.c and obstack.h from the GCC libiberty library."
+third_party {
+  license_type: RESTRICTED
+  last_upgrade_date {
+    year: 2025
+    month: 1
+    day: 9
+  }
+  homepage: "https://gcc.gnu.org/onlinedocs/libiberty/Obstacks.html"
+  identifier {
+    type: "Archive"
+    value: "https://github.com/gcc-mirror/gcc/archive/releases/gcc-14.2.0.tar.gz"
+    version: "releases/gcc-14.2.0"
+  }
+}

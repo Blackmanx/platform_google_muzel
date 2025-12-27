@@ -1,0 +1,2 @@
+Invocation of a VarHandle or a MethodHandle targeting a static field should trigger initialization
+of its declaring class.

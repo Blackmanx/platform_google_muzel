@@ -1,0 +1,281 @@
+/*
+ * Copyright (C) 2022 MediaTek Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#pragma once
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+#include "../dbg_exif_def.h"
+
+namespace dbg_cam_n3d_param_4 {
+/******************************************************************************
+ *
+ ******************************************************************************/
+enum
+{
+    //BEGIN_OF_EXIF_TAG
+    N3D_AE_TAG_DEBUG_VERSION = 0,
+    N3D_AE_SYNCNUM,
+    N3D_AE_SYNCMODE,
+    N3D_AE_SYNCPOLICY,
+    N3D_AE_LOWER_BV,
+    N3D_AE_UPPER_BV,
+    N3D_AE_MASTER_IDX,
+
+    N3D_AE_CAL_GAIN_R,
+    N3D_AE_CAL_GAIN_G,
+    N3D_AE_CAL_GAIN_B,
+    N3D_AE_CAL_YGAIN,
+    N3D_AE_CAL_OFFSET,
+    N3D_AE_REG_OFFSET,
+
+    N3D_AE_0_AEIDX,
+    N3D_AE_0_AFEGAIN,
+    N3D_AE_0_SHUTTER,
+    N3D_AE_0_ISPGAIN,
+    N3D_AE_0_CWY,
+    N3D_AE_0_SYNCGAIN,
+
+    N3D_AE_1_AEIDX,
+    N3D_AE_1_AFEGAIN,
+    N3D_AE_1_SHUTTER,
+    N3D_AE_1_ISPGAIN,
+    N3D_AE_1_CWY,
+    N3D_AE_1_SYNCGAIN,
+
+    //Intermedium Data
+    N3D_AWB_TAG_DEBUG_VERSION,
+    N3D_AWB_AWBSYNC_METHOD,
+    N3D_AWB_IS_FREE_RUN, 
+    N3D_AWB_ADV_PP_TUNING_VALID_BLK_NUM_RATIO,
+    N3D_AWB_ADV_PP_TUNING_AWBSTA_Y_TH,
+    N3D_AWB_ADV_PP_MAIN_VALID_BLK_COUNT,
+    N3D_AWB_ADV_PP_SUB_VALID_BLK_COUNT,
+    N3D_AWB_ADV_PP_MAIN_STAT_AVG_R,
+    N3D_AWB_ADV_PP_MAIN_STAT_AVG_G,
+    N3D_AWB_ADV_PP_MAIN_STAT_AVG_B,
+    N3D_AWB_ADV_PP_SUB_STAT_AVG_R,
+    N3D_AWB_ADV_PP_SUB_STAT_AVG_G,
+    N3D_AWB_ADV_PP_SUB_STAT_AVG_B,
+
+    //Input Data - Main
+    N3D_AWB_MAIN_NORMAL_WB_HORIZON_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_HORIZON_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_HORIZON_GAIN_B,
+    N3D_AWB_MAIN_HORIZON_CCT,
+    N3D_AWB_MAIN_NORMAL_WB_A_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_A_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_A_GAIN_B,
+    N3D_AWB_MAIN_A_CCT,
+    N3D_AWB_MAIN_NORMAL_WB_TL84_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_TL84_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_TL84_GAIN_B,
+    N3D_AWB_MAIN_NORMAL_WB_CWF_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_CWF_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_CWF_GAIN_B,
+    N3D_AWB_MAIN_TL84_CCT,
+    N3D_AWB_MAIN_NORMAL_WB_DNP_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_DNP_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_DNP_GAIN_B,
+    N3D_AWB_MAIN_DNP_CCT,
+    N3D_AWB_MAIN_NORMAL_WB_D65_GAIN_R,
+    N3D_AWB_MAIN_NORMAL_WB_D65_GAIN_G,
+    N3D_AWB_MAIN_NORMAL_WB_D65_GAIN_B,
+    N3D_AWB_MAIN_D65_CCT,
+    N3D_AWB_MAIN_UNIT_GAIN_R,
+    N3D_AWB_MAIN_UNIT_GAIN_G,
+    N3D_AWB_MAIN_UNIT_GAIN_B,
+    N3D_AWB_MAIN_GOLDEN_GAIN_R,
+    N3D_AWB_MAIN_GOLDEN_GAIN_G,
+    N3D_AWB_MAIN_GOLDEN_GAIN_B,
+    N3D_AWB_MAIN_CURR_GAIN_R,
+    N3D_AWB_MAIN_CURR_GAIN_G,
+    N3D_AWB_MAIN_CURR_GAIN_B,
+    
+    N3D_AWB_MAIN_CURR_ALG_GAIN_R,
+    N3D_AWB_MAIN_CURR_ALG_GAIN_G,
+    N3D_AWB_MAIN_CURR_ALG_GAIN_B,
+    N3D_AWB_MAIN_CURR_TARGET_GAIN_R,
+    N3D_AWB_MAIN_CURR_TARGET_GAIN_G,
+    N3D_AWB_MAIN_CURR_TARGET_GAIN_B,
+
+    N3D_AWB_MAIN_CURR_CCT,
+    N3D_AWB_MAIN_CURR_LIGHT_MODE,
+    N3D_AWB_MAIN_CURR_LV,
+    N3D_AWB_MAIN_CURR_TUNGSTEN_P,
+    N3D_AWB_MAIN_CURR_WARM_FLUORESCENT_P,
+    N3D_AWB_MAIN_CURR_FLUORESCENT_P,
+    N3D_AWB_MAIN_CURR_CWF_P,
+    N3D_AWB_MAIN_CURR_DAYLIGHT_P,
+    N3D_AWB_MAIN_CURR_SHADE_P,
+    N3D_AWB_MAIN_CURR_DAYLIGHT_FLUORESCENT_P,
+
+	//Input Data - Sub
+    N3D_AWB_SUB_NORMAL_WB_HORIZON_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_HORIZON_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_HORIZON_GAIN_B,
+    N3D_AWB_SUB_HORIZON_CCT,
+    N3D_AWB_SUB_NORMAL_WB_A_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_A_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_A_GAIN_B,
+    N3D_AWB_SUB_A_CCT,
+    N3D_AWB_SUB_NORMAL_WB_TL84_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_TL84_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_TL84_GAIN_B,
+    N3D_AWB_SUB_NORMAL_WB_CWF_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_CWF_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_CWF_GAIN_B,
+    N3D_AWB_SUB_TL84_CCT,
+    N3D_AWB_SUB_NORMAL_WB_DNP_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_DNP_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_DNP_GAIN_B,
+    N3D_AWB_SUB_DNP_CCT,
+    N3D_AWB_SUB_NORMAL_WB_D65_GAIN_R,
+    N3D_AWB_SUB_NORMAL_WB_D65_GAIN_G,
+    N3D_AWB_SUB_NORMAL_WB_D65_GAIN_B,
+    N3D_AWB_SUB_D65_CCT,
+    N3D_AWB_SUB_UNIT_GAIN_R,
+    N3D_AWB_SUB_UNIT_GAIN_G,
+    N3D_AWB_SUB_UNIT_GAIN_B,
+    N3D_AWB_SUB_GOLDEN_GAIN_R,
+    N3D_AWB_SUB_GOLDEN_GAIN_G,
+    N3D_AWB_SUB_GOLDEN_GAIN_B,
+    N3D_AWB_SUB_CURR_GAIN_R,
+    N3D_AWB_SUB_CURR_GAIN_G,
+    N3D_AWB_SUB_CURR_GAIN_B,
+    N3D_AWB_SUB_CURR_ALG_GAIN_R,
+    N3D_AWB_SUB_CURR_ALG_GAIN_G,
+    N3D_AWB_SUB_CURR_ALG_GAIN_B,
+    N3D_AWB_SUB_CURR_TARGET_GAIN_R,
+    N3D_AWB_SUB_CURR_TARGET_GAIN_G,
+    N3D_AWB_SUB_CURR_TARGET_GAIN_B,
+    N3D_AWB_SUB_CURR_CCT,
+    N3D_AWB_SUB_CURR_LIGHT_MODE,
+    N3D_AWB_SUB_CURR_LV,
+    N3D_AWB_SUB_CURR_TUNGSTEN_P,
+    N3D_AWB_SUB_CURR_WARM_FLUORESCENT_P,
+    N3D_AWB_SUB_CURR_FLUORESCENT_P,
+    N3D_AWB_SUB_CURR_CWF_P,
+    N3D_AWB_SUB_CURR_DAYLIGHT_P,
+    N3D_AWB_SUB_CURR_SHADE_P,
+    N3D_AWB_SUB_CURR_DAYLIGHT_FLUORESCENT_P,
+
+    N3D_AWB_GAIN_INTPOLA_GAINRATIO_TH0,
+    N3D_AWB_GAIN_INTPOLA_GAINRATIO_TH1,
+    N3D_AWB_GAIN_INTPOLA_GAINRATIO_TH2,
+    N3D_AWB_GAIN_INTPOLA_GAINRATIO_TH3,
+    N3D_AWB_GAIN_INTPOLA_CCT_DIFF_TH0,
+    N3D_AWB_GAIN_INTPOLA_CCT_DIFF_TH1,
+    N3D_AWB_GAIN_INTPOLA_CCT_DIFF_TH2,
+    N3D_AWB_GAIN_INTPOLA_CCT_DIFF_TH3,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_H_RGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_H_BGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_A_RGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_A_BGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_TL84_RGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_TL84_BGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_DNP_RGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_DNP_BGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_D65_RGAIN,
+    N3D_AWB_GAIN_INTPOLA_MASTER_GAIN_D65_BGAIN,
+
+	//Output Data - Main
+	N3D_AWB_MAIN_OUTPUT_GAIN_R,
+	N3D_AWB_MAIN_OUTPUT_GAIN_G,
+	N3D_AWB_MAIN_OUTPUT_GAIN_B,
+	N3D_AWB_MAIN_OUTPUT_CCT,
+
+	//Output Data - Sub
+	N3D_AWB_SUB_OUTPUT_GAIN_R,
+	N3D_AWB_SUB_OUTPUT_GAIN_G,
+	N3D_AWB_SUB_OUTPUT_GAIN_B,
+	N3D_AWB_SUB_OUTPUT_CCT,
+
+    N3D_AWB_TAG_MAX
+    //END_OF_EXIF_TAG
+};
+
+enum
+{
+    N3D_AE_TAG_MAX = N3D_AWB_TAG_DEBUG_VERSION
+};
+
+
+//N3D AE debug info
+enum { N3D_AE_DEBUG_VERSION = 2 };
+enum { N3D_AE_DEBUG_TAG_SIZE = (N3D_AE_TAG_MAX+10) };
+
+typedef struct
+{
+    debug_exif_field Tag[N3D_AE_DEBUG_TAG_SIZE];
+} N3D_AE_DEBUG_INFO_T;
+
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+
+//N3D AWB debug info
+enum { N3D_AWB_DEBUG_VERSION = 2 };
+enum { N3D_AWB_DEBUG_TAG_SIZE = (N3D_AWB_TAG_MAX+10) };
+
+typedef struct
+{
+    debug_exif_field Tag[N3D_AWB_DEBUG_TAG_SIZE];
+} N3D_AWB_DEBUG_INFO_T;
+
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+//Common Parameter Structure
+typedef enum
+{
+    N3D_TAG_VERSION = 0,
+
+}DEBUG_N3D_TAG_T;
+
+
+// Native3D debug info
+enum { N3D_DEBUG_TAG_SIZE = ((int)N3D_AE_DEBUG_TAG_SIZE+(int)N3D_AWB_DEBUG_TAG_SIZE) };
+enum { N3D_DEBUG_TAG_VERSION = 4 };
+enum { N3D_DEBUG_TAG_SUBVERSION = 0 };
+#define N3D_DEBUG_TAG_VERSION_DP ((N3D_DEBUG_TAG_SUBVERSION << 16) | N3D_DEBUG_TAG_VERSION)
+
+enum { DEBUG_N3D_AE_MODULE_ID   = 0x0001 };
+enum { DEBUG_N3D_AWB_MODULE_ID  = 0x0002 };
+
+
+typedef struct DEBUG_N3D_INFO_S
+{
+    debug_exif_field Tag[N3D_DEBUG_TAG_SIZE];
+} DEBUG_N3D_INFO_T;
+
+
+typedef struct
+{
+    N3D_AE_DEBUG_INFO_T  rAEDebugInfo;
+    N3D_AWB_DEBUG_INFO_T rAWBDebugInfo;
+} N3D_DEBUG_INFO_T;
+
+
+
+/******************************************************************************
+ *
+ ******************************************************************************/
+}  //namespace
+

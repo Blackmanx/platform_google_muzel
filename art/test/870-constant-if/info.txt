@@ -1,0 +1,2 @@
+Regression test for the fast compiler when handling constants in if-*
+instructions.

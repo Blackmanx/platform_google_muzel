@@ -1,0 +1,2 @@
+Ensure that invoke-virtual targeting MethodHandle::invoke or MethodHandle::invokeExact
+does not crash the runtime.

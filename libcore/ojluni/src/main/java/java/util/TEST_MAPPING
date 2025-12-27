@@ -1,0 +1,12 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_java_util"
+    }
+  ],
+  "presubmit-large": [
+    {
+      "name": "CtsLibcoreOjTestCases_util"
+    }
+  ]
+}

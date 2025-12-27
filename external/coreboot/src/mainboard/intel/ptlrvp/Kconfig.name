@@ -1,0 +1,9 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+comment "Ptlrvp"
+
+config BOARD_INTEL_PTLRVP
+	bool "-> Ptlrvp"
+
+config BOARD_INTEL_PTLRVP_CHROMEEC
+	bool "-> Google Chrome EC"

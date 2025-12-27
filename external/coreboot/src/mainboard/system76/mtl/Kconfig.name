@@ -1,0 +1,19 @@
+## SPDX-License-Identifier: GPL-2.0-only
+
+config BOARD_SYSTEM76_DARP10
+	bool "darp10"
+
+config BOARD_SYSTEM76_DARP10_B
+	bool "darp10-b"
+
+config BOARD_SYSTEM76_DARP11
+	bool "darp11"
+
+config BOARD_SYSTEM76_DARP11_B
+	bool "darp11-b"
+
+config BOARD_SYSTEM76_LEMP13
+	bool "lemp13"
+
+config BOARD_SYSTEM76_LEMP13_B
+	bool "lemp13-b"

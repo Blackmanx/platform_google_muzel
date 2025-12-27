@@ -1,0 +1,33 @@
+# ART mirrored classes that may not be tolerant to R8 optimizations that change
+# methods, static fields, or object memory layout. These are the classes in
+# art/runtime/mirror that inherit art::mirror::Object.
+dalvik.system.ClassExt
+dalvik.system.EmulatedStackFrame
+java.lang.Class
+java.lang.ClassLoader
+java.lang.DexCache
+java.lang.Object
+java.lang.StackFrameInfo
+java.lang.StackTraceElement
+java.lang.String
+java.lang.Throwable
+java.lang.invoke.ArrayElementVarHandle
+java.lang.invoke.ByteArrayViewVarHandle
+java.lang.invoke.ByteBufferViewVarHandle
+java.lang.invoke.CallSite
+java.lang.invoke.FieldVarHandle
+java.lang.invoke.MemorySegmentVarHandle
+java.lang.invoke.MethodHandle
+java.lang.invoke.MethodHandleImpl
+java.lang.invoke.MethodHandles$Lookup
+java.lang.invoke.MethodType
+java.lang.invoke.StaticFieldVarHandle
+java.lang.invoke.VarHandle
+java.lang.ref.FinalizerReference
+java.lang.ref.Reference
+java.lang.reflect.AccessibleObject
+java.lang.reflect.Constructor
+java.lang.reflect.Executable
+java.lang.reflect.Field
+java.lang.reflect.Method
+java.lang.reflect.Proxy

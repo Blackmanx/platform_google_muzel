@@ -1,0 +1,2 @@
+JNI_OnLoad called
+JNI_OnLoad in libarttest_external.cc called

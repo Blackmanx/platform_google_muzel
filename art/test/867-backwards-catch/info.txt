@@ -1,0 +1,2 @@
+Regression test for the fast compiler in the presence of a catch handler which
+happens before the try block.

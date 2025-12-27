@@ -1,0 +1,1 @@
+Regression test calling super.clone from an interface method.

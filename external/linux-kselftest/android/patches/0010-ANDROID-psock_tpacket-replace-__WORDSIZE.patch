@@ -1,0 +1,39 @@
+From bb9f0a9b41887d40043ec6a7175f374f854adbeb Mon Sep 17 00:00:00 2001
+From: Wake Liu <wakel@google.com>
+Date: Thu, 24 Jul 2025 19:51:43 +0800
+Subject: [PATCH] ANDROID: psock_tpacket: replace __WORDSIZE
+
+Bug: 422759683
+Original-Bug: 310034344
+Test: atest -a vts_linux_kselftest_x86_64
+Link: https://lore.kernel.org/all/20250807080932.1678178-1-wakel@google.com/
+Change-Id: I39d496ec924dcad47758ae90be87e51c7edbb7ec
+Signed-off-by: Wake Liu <wakel@google.com>
+---
+ tools/testing/selftests/net/psock_tpacket.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/net/psock_tpacket.c b/tools/testing/selftests/net/psock_tpacket.c
+index 221270cee3eaa..0dd909e325d93 100644
+--- a/tools/testing/selftests/net/psock_tpacket.c
++++ b/tools/testing/selftests/net/psock_tpacket.c
+@@ -33,7 +33,6 @@
+ #include <ctype.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+-#include <bits/wordsize.h>
+ #include <net/ethernet.h>
+ #include <netinet/ip.h>
+ #include <arpa/inet.h>
+@@ -785,7 +784,7 @@ static int test_kernel_bit_width(void)
+ 
+ static int test_user_bit_width(void)
+ {
+-	return __WORDSIZE;
++	return sizeof(long) * 8;
+ }
+ 
+ static const char *tpacket_str[] = {
+-- 
+2.50.1.703.g449372360f-goog
+

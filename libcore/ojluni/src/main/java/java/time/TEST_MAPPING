@@ -1,0 +1,12 @@
+{
+  "presubmit": [
+    {
+      "name": "CtsLibcoreTestCases_time"
+    }
+  ],
+  "presubmit-large": [
+    {
+      "name": "CtsLibcoreOjTestCases_time"
+    }
+  ]
+}

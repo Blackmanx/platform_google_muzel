@@ -1,0 +1,5 @@
+# Bug component: 391836
+bettyzhou@google.com
+adelva@google.com
+balsini@google.com
+include platform/system/core:/janitors/OWNERS #{LAST_RESORT_SUGGESTION}

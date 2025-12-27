@@ -1,0 +1,217 @@
+From 2882f9ba9d16aa7d33d93fd1318be32256d38d3c Mon Sep 17 00:00:00 2001
+From: Wake Liu <wakel@google.com>
+Date: Fri, 1 Aug 2025 15:14:59 +0800
+Subject: [PATCH] ANDROID: futex check for shmget support at runtime
+
+The futex tests `futex_wait.c` and `futex_waitv.c` rely on the `shmget()`
+syscall, which may not be available if the kernel is built without
+System V IPC support (CONFIG_SYSVIPC=n). This can lead to test
+failures on such systems.
+
+This patch modifies the tests to check for `shmget()` support at
+runtime by calling it and checking for an `ENOSYS` error. If `shmget()`
+is not supported, the tests are skipped with a clear message,
+improving the user experience and preventing false negatives.
+
+This approach is more robust than relying on compile-time checks and
+ensures that the tests run only when the required kernel features are
+present.
+
+Original-Bug: 234151152
+Bug: 422759683
+Test: mma
+Link: https://lore.kernel.org/all/20250809071727.2422511-1-wakel@google.com/
+Signed-off-by: Wake Liu <wakel@google.com>
+Change-Id: Idd223231a9829034619c6f924d837f651d976518
+---
+ .../selftests/futex/functional/futex_wait.c   | 57 ++++++++-------
+ .../selftests/futex/functional/futex_waitv.c  | 73 ++++++++++++-------
+ 2 files changed, 78 insertions(+), 52 deletions(-)
+
+diff --git a/tools/testing/selftests/futex/functional/futex_wait.c b/tools/testing/selftests/futex/functional/futex_wait.c
+index 685140d9b93d2..d91aa76896978 100644
+--- a/tools/testing/selftests/futex/functional/futex_wait.c
++++ b/tools/testing/selftests/futex/functional/futex_wait.c
+@@ -48,7 +48,7 @@ static void *waiterfn(void *arg)
+ int main(int argc, char *argv[])
+ {
+ 	int res, ret = RET_PASS, fd, c, shm_id;
+-	u_int32_t f_private = 0, *shared_data;
++	u_int32_t f_private = 0, *shared_data = NULL;
+ 	unsigned int flags = FUTEX_PRIVATE_FLAG;
+ 	pthread_t waiter;
+ 	void *shm;
+@@ -96,32 +96,37 @@ int main(int argc, char *argv[])
+ 	/* Testing an anon page shared memory */
+ 	shm_id = shmget(IPC_PRIVATE, 4096, IPC_CREAT | 0666);
+ 	if (shm_id < 0) {
+-		perror("shmget");
+-		exit(1);
+-	}
+-
+-	shared_data = shmat(shm_id, NULL, 0);
+-
+-	*shared_data = 0;
+-	futex = shared_data;
+-
+-	info("Calling shared (page anon) futex_wait on futex: %p\n", futex);
+-	if (pthread_create(&waiter, NULL, waiterfn, NULL))
+-		error("pthread_create failed\n", errno);
+-
+-	usleep(WAKE_WAIT_US);
+-
+-	info("Calling shared (page anon) futex_wake on futex: %p\n", futex);
+-	res = futex_wake(futex, 1, 0);
+-	if (res != 1) {
+-		ksft_test_result_fail("futex_wake shared (page anon) returned: %d %s\n",
+-				      errno, strerror(errno));
+-		ret = RET_FAIL;
++		if (errno == ENOSYS) {
++			ksft_test_result_skip("Kernel does not support System V shared memory\n");
++		} else {
++			ksft_test_result_fail("shmget() failed with error: %s\n", strerror(errno));
++			ret = RET_FAIL;
++		}
+ 	} else {
+-		ksft_test_result_pass("futex_wake shared (page anon) succeeds\n");
++		shared_data = shmat(shm_id, NULL, 0);
++
++		*shared_data = 0;
++		futex = shared_data;
++
++		info("Calling shared (page anon) futex_wait on futex: %p\n", futex);
++		if (pthread_create(&waiter, NULL, waiterfn, NULL))
++			error("pthread_create failed\n", errno);
++
++		usleep(WAKE_WAIT_US);
++
++		info("Calling shared (page anon) futex_wake on futex: %p\n", futex);
++		res = futex_wake(futex, 1, 0);
++		if (res != 1) {
++			if (res < 0)
++				ksft_test_result_fail("futex_wake shared (page anon) failed with res=%d: %m\n", res);
++			else
++				ksft_test_result_fail("futex_wake shared (page anon) returned %d, expected 1\n", res);
++			ret = RET_FAIL;
++		} else {
++			ksft_test_result_pass("futex_wake shared (page anon) succeeds\n");
++		}
+ 	}
+ 
+-
+ 	/* Testing a file backed shared memory */
+ 	fd = open(SHM_PATH, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+ 	if (fd < 0) {
+@@ -161,7 +166,8 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	/* Freeing resources */
+-	shmdt(shared_data);
++	if (shared_data)
++		shmdt(shared_data);
+ 	munmap(shm, sizeof(f_private));
+ 	remove(SHM_PATH);
+ 	close(fd);
+@@ -169,3 +175,4 @@ int main(int argc, char *argv[])
+ 	ksft_print_cnts();
+ 	return ret;
+ }
++
+diff --git a/tools/testing/selftests/futex/functional/futex_waitv.c b/tools/testing/selftests/futex/functional/futex_waitv.c
+index a94337f677e18..034dbfef40cb2 100644
+--- a/tools/testing/selftests/futex/functional/futex_waitv.c
++++ b/tools/testing/selftests/futex/functional/futex_waitv.c
+@@ -110,40 +110,58 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	/* Shared waitv */
+-	for (i = 0; i < NR_FUTEXES; i++) {
+-		int shm_id = shmget(IPC_PRIVATE, 4096, IPC_CREAT | 0666);
+-
+-		if (shm_id < 0) {
+-			perror("shmget");
+-			exit(1);
++	bool shm_supported = true;
++	int shm_id = shmget(IPC_PRIVATE, 4096, IPC_CREAT | 0666);
++
++	if (shm_id < 0) {
++		if (errno == ENOSYS) {
++			shm_supported = false;
++			ksft_test_result_skip("Kernel does not support System V shared memory\n");
++		} else {
++			ksft_test_result_fail("shmget() failed with error: %s\n", strerror(errno));
++			ret = RET_FAIL;
++			shm_supported = false;
+ 		}
++	} else {
++		shmctl(shm_id, IPC_RMID, NULL);
++	}
+ 
+-		unsigned int *shared_data = shmat(shm_id, NULL, 0);
++	if (shm_supported) {
++		for (i = 0; i < NR_FUTEXES; i++) {
++			int shm_id = shmget(IPC_PRIVATE, 4096, IPC_CREAT | 0666);
+ 
+-		*shared_data = 0;
+-		waitv[i].uaddr = (uintptr_t)shared_data;
+-		waitv[i].flags = FUTEX_32;
+-		waitv[i].val = 0;
+-		waitv[i].__reserved = 0;
+-	}
++			if (shm_id < 0) {
++				perror("shmget");
++				exit(1);
++			}
+ 
+-	if (pthread_create(&waiter, NULL, waiterfn, NULL))
+-		error("pthread_create failed\n", errno);
++			unsigned int *shared_data = shmat(shm_id, NULL, 0);
+ 
+-	usleep(WAKE_WAIT_US);
++			*shared_data = 0;
++			waitv[i].uaddr = (uintptr_t)shared_data;
++			waitv[i].flags = FUTEX_32;
++			waitv[i].val = 0;
++			waitv[i].__reserved = 0;
++		}
+ 
+-	res = futex_wake(u64_to_ptr(waitv[NR_FUTEXES - 1].uaddr), 1, 0);
+-	if (res != 1) {
+-		ksft_test_result_fail("futex_wake shared returned: %d %s\n",
+-				      res ? errno : res,
+-				      res ? strerror(errno) : "");
+-		ret = RET_FAIL;
+-	} else {
+-		ksft_test_result_pass("futex_waitv shared\n");
+-	}
++		if (pthread_create(&waiter, NULL, waiterfn, NULL))
++			error("pthread_create failed\n", errno);
+ 
+-	for (i = 0; i < NR_FUTEXES; i++)
+-		shmdt(u64_to_ptr(waitv[i].uaddr));
++		usleep(WAKE_WAIT_US);
++
++		res = futex_wake(u64_to_ptr(waitv[NR_FUTEXES - 1].uaddr), 1, 0);
++        if (res != 1) {
++            ksft_test_result_fail("futex_wake shared returned: %d %s\n",
++                                  res ? errno : res,
++                                  res ? strerror(errno) : "");
++            ret = RET_FAIL;
++        } else {
++			ksft_test_result_pass("futex_waitv shared\n");
++		}
++
++		for (i = 0; i < NR_FUTEXES; i++)
++			shmdt(u64_to_ptr(waitv[i].uaddr));
++	}
+ 
+ 	/* Testing a waiter without FUTEX_32 flag */
+ 	waitv[0].flags = FUTEX_PRIVATE_FLAG;
+@@ -235,3 +253,4 @@ int main(int argc, char *argv[])
+ 	ksft_print_cnts();
+ 	return ret;
+ }
++
+-- 
+2.50.1.703.g449372360f-goog
+

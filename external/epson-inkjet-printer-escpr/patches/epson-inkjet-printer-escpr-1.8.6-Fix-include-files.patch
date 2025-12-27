@@ -1,0 +1,24 @@
+From 646ca47042268a6fb6e01c42a730c5a19a205bed Mon Sep 17 00:00:00 2001
+From: Nathan Muggli <nmuggli@google.com>
+Date: Tue, 25 Mar 2025 16:28:05 -0600
+Subject: [PATCH] Fix include files
+
+---
+ src/wrapper.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/wrapper.c b/src/wrapper.c
+index b1b3ea5..906dc50 100644
+--- a/src/wrapper.c
++++ b/src/wrapper.c
+@@ -35,6 +35,7 @@
+ #include <signal.h>
+ 
+ #include "libprtX.h"
++#include "custompage.h"
+ 
+ #define WIDTH_BYTES(bits) (((bits) + 31) / 32 * 4)
+ 
+-- 
+2.49.0.395.g12beb8f557-goog
+
